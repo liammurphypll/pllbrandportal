@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PLL Brand Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #000000;
+    --yellow: #ffc72c;
+    --white: #ffffff;
+    --gray: #999999;
+    --gray-dim: #555555;
+    --rule: #1f1f1f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Archivo', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* ===== SPLASH ===== */
+  #splash {
+    position: fixed; inset: 0; z-index: 999;
+    background: var(--black);
+    display: flex; align-items: center; justify-content: center;
+    animation: splashOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 0.82s;
+    pointer-events: none;
+  }
+
+  #splash img {
+    height: 52vh; width: auto;
+    animation: beaverInOut 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes beaverInOut {
+    0%   { opacity: 0; transform: translateY(20px) scale(0.5); }
+    25%  { opacity: 1; transform: translateY(-8px) scale(1.1); }  /* punch */
+    38%  { opacity: 1; transform: translateY(0) scale(1); }       /* settle */
+    62%  { opacity: 1; transform: translateY(0) scale(1); }       /* hold */
+    100% { opacity: 0; transform: translateY(-24px) scale(1.9); } /* zoom out */
+  }
+
+  @keyframes splashOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+
+  .landing {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 0;
+  }
+
+  /* Top label */
+  .portal-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #ffcb06;
+    margin-bottom: 2rem;
+  }
+
+  /* Logo image */
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    width: 100%;
+    max-width: 770px;
+    margin-bottom: 2.5rem;
+  }
+
+  .logo-wrap img {
+    height: auto;
+    max-height: 15.4vh;
+    max-width: 42%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Divider line between the two logos */
+  .logo-divider {
+    width: 1px;
+    height: 50%;
+    align-self: center;
+    background: #ffcb06;
+    flex-shrink: 0;
+  }
+
+  /* CTA buttons row */
+  .cta-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Password gate */
+  .password-gate {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--black);
+    border: 1px solid var(--yellow);
+    border-radius: 3px;
+    padding: 0.45rem 0.65rem;
+    box-sizing: border-box;
+  }
+
+  .password-gate input[type="password"],
+  .password-gate input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 1.0rem;
+  }
+
+  .password-gate input::placeholder { color: var(--gray-dim); }
+
+  .password-toggle {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--gray-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0.3rem 0.4rem;
+    transition: color 0.2s ease;
+  }
+
+  .password-toggle:hover { color: var(--white); }
+
+  .password-submit {
+    flex-shrink: 0;
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 0.5rem 0.9rem;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .password-submit:hover { background: #ffd740; }
+
+  .password-error {
+    display: none;
+    margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ff5c5c;
+    text-align: center;
+  }
+
+  .password-error.show { display: block; }
+
+  .cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    text-decoration: none;
+    color: var(--white);
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    gap: 1.5rem;
+    width: auto;
+  }
+
+  .cta-btn:hover {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--black);
+  }
+
+  .cta-btn:hover .cta-arrow { color: var(--black); }
+
+  .cta-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .cta-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray);
+    transition: color 0.2s ease;
+  }
+
+  .cta-btn:hover .cta-eyebrow { color: rgba(0,0,0,0.6); }
+
+  .cta-name {
+    font-family: 'Archivo', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .cta-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    transition: color 0.2s ease;
+  }
+
+  .cta-btn:hover .cta-count { color: rgba(0,0,0,0.6); }
+
+  .cta-arrow {
+    color: var(--yellow);
+    flex-shrink: 0;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .cta-btn:hover .cta-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  /* Footer */
+  .landing-footer {
+    position: fixed;
+    bottom: 1.75rem;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-dim);
+  }
+
+  .landing-footer a { color: var(--yellow); text-decoration: none; }
+
+  /* Entrance animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .portal-label { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.05s; }
+  .logo-wrap    { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.15s; }
+  .cta-row      { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both; animation-delay: 0.3s; }
+
+  @media (max-width: 600px) {
+    .cta-row { flex-direction: column; }
+    .logo-wrap img { max-height: 38vh; }
+  }
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <img src="assets/beaver.png" alt="" />
+</div>
+
+<div class="landing">
+  <div class="portal-label">Brand Portal</div>
+
+  <div class="logo-wrap">
+    <img src="assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" alt="Premier Lacrosse League" />
+    <div class="logo-divider"></div>
+    <img src="assets/WLL/PNG/WLL_Wordmark_FullColor_DarkBkg.png" alt="Women's Lacrosse League" />
+  </div>
+
+  <div class="password-gate" id="passwordGate">
+    <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off" />
+    <button class="password-toggle" id="passwordToggle">Show</button>
+    <button class="password-submit" id="passwordSubmit">Enter</button>
+  </div>
+  <div class="password-error" id="passwordError">Incorrect password</div>
+
+  <div class="cta-row" id="ctaRow" style="display:none;">
+    <a class="cta-btn" href="pll-teams.html">
+      <div class="cta-label">
+        <span class="cta-name">Premier Lacrosse League</span>
+        <span class="cta-count">8 Teams</span>
+      </div>
+      <span class="cta-arrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+      </span>
+    </a>
+
+    <a class="cta-btn" href="wll-teams.html">
+      <div class="cta-label">
+        <span class="cta-name">Women's Lacrosse League</span>
+        <span class="cta-count">4 Teams</span>
+      </div>
+      <span class="cta-arrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>
+      </span>
+    </a>
+  </div>
+</div>
+
+<footer class="landing-footer">
+  <span>© Premier Lacrosse League 2026</span>
+</footer>
+
+<script>
+  document.getElementById('splash').addEventListener('animationend', function() {
+    this.style.display = 'none';
+  });
+
+  // ── PASSWORD GATE ────────────────────────────────────────────────────
+  // NOTE: this is a static page with no backend — the password lives in
+  // this file and is visible to anyone who views source. It's a soft
+  // gate, not real access control. Change PORTAL_PASSWORD to update it.
+  const PORTAL_PASSWORD = '#ffcb06';
+
+  const gate     = document.getElementById('passwordGate');
+  const ctaRow   = document.getElementById('ctaRow');
+  const input    = document.getElementById('passwordInput');
+  const submit   = document.getElementById('passwordSubmit');
+  const toggle   = document.getElementById('passwordToggle');
+  const errorEl  = document.getElementById('passwordError');
+
+  // Measure the pill row's natural width (off-screen) so the password
+  // bar can match half of it, then keep the pills hidden until unlocked.
+  ctaRow.style.visibility = 'hidden';
+  ctaRow.style.position = 'absolute';
+  ctaRow.style.display = 'flex';
+  gate.style.width = (ctaRow.offsetWidth / 2) + 'px';
+  ctaRow.style.position = '';
+  ctaRow.style.visibility = '';
+  ctaRow.style.display = 'none';
+
+  function tryUnlock() {
+    if (input.value === PORTAL_PASSWORD) {
+      gate.style.display = 'none';
+      errorEl.classList.remove('show');
+      ctaRow.style.display = 'flex';
+    } else {
+      errorEl.classList.add('show');
+    }
+  }
+
+  submit.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') tryUnlock();
+    errorEl.classList.remove('show');
+  });
+
+  toggle.addEventListener('click', () => {
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    toggle.textContent = showing ? 'Show' : 'Hide';
+  });
+</script>
+</body>
+</html>

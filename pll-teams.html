@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PLL Teams — Brand Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #000000;
+    --ink: #0a0a0a;
+    --ink-2: #141414;
+    --white: #ffffff;
+    --gray: #999999;
+    --gray-dim: #555555;
+    --rule: #1f1f1f;
+    --pll-yellow: #ffcb06;
+    --brand-primary: #ffcb06;
+    --brand-secondary: #ffcb06;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--black); color: var(--white); font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+  /* ===== TOP BAR ===== */
+  .topbar { border-bottom: 1px solid var(--rule); background: var(--ink); position: sticky; top: 0; z-index: 100; }
+
+  .league-bar { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--rule); }
+  .league-half { position: relative; display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1.75rem; background: none; cursor: pointer; transition: background 0.15s ease; text-decoration: none; color: var(--white); }
+  .league-half.pll-half { justify-content: flex-end; border-right: 1px solid var(--rule); }
+  .league-half.wll-half { justify-content: flex-start; }
+  .league-half:hover { background: rgba(255,255,255,0.04); }
+  .league-mark { width: 34px; height: 34px; object-fit: contain; display: none; }
+  .league-half .mark-active { opacity: 1; }
+  .league-half.active .mark-active { display: block; }
+  .league-half .mark-inactive { opacity: 0.1; }
+  .league-half:not(.active) .mark-inactive { display: block; }
+  .league-spell { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.50em; text-transform: uppercase; white-space: nowrap; font-weight: 500; color: var(--pll-yellow); opacity: 0.1; }
+  .league-half.active .league-spell { opacity: 1; }
+
+  /* Team nav */
+  .topbar-teams { display: flex; align-items: stretch; }
+  .topbar-teams.hidden { display: none; }
+  .topbar-team { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem 0.4rem; text-decoration: none; color: var(--gray-dim); transition: all 0.15s ease; white-space: nowrap; flex: 1; border-right: 1px solid var(--rule); position: relative; }
+  .topbar-team:first-child { border-left: 1px solid var(--rule); }
+  .topbar-team:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .topbar-team.active { color: var(--white); background: var(--ink); }
+  .topbar-team.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--pll-yellow); }
+  .topbar-team img { width: 28px; height: 28px; object-fit: contain; display: block; opacity: 0.45; transition: opacity 0.15s ease; }
+  .topbar-team:hover img, .topbar-team.active img { opacity: 1; }
+  .topbar-team span { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .topbar-team.active span { color: var(--white); }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative; min-height: 400px;
+    display: flex; align-items: center; overflow: hidden;
+    border-bottom: 3px solid var(--pll-yellow);
+    background: var(--black);
+  }
+  .hero-inner {
+    position: relative; z-index: 2;
+    max-width: 1400px; margin: 0 auto; padding: 1.5rem 3rem; width: 100%;
+    display: flex; align-items: center; justify-content: space-between; gap: 4rem;
+  }
+  .hero-text { flex: 1; }
+  .hero-title { font-family: 'Archivo', sans-serif; font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 0.88; letter-spacing: -0.04em; text-transform: uppercase; color: var(--white); }
+  .hero-logo { flex-shrink: 0; width: 225px; height: 225px; }
+  .hero-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  /* ===== CONTENT ===== */
+  .content { max-width: 1400px; margin: 0 auto; padding: 4rem 3rem; }
+  .section { margin-bottom: 5rem; }
+  .section-header { display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: baseline; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.75rem; cursor: pointer; }
+  .section-number { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.2em; color: var(--pll-yellow); }
+  .section-title { font-family: 'Archivo', sans-serif; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; }
+  .section-toggle { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: none; border: 1px solid var(--rule); border-radius: 2px; color: var(--gray-dim); cursor: pointer; transition: all 0.15s ease; flex-shrink: 0; }
+  .section-toggle:hover { border-color: var(--gray-dim); color: var(--white); }
+  .section-toggle svg { width: 12px; height: 12px; transition: transform 0.25s ease; }
+  .section-toggle.collapsed svg { transform: rotate(-90deg); }
+  .section-body.collapsed { display: none; }
+
+  /* ===== LOGO TILES ===== */
+  .logo-group { margin-bottom: 2.75rem; }
+  .logo-group:last-child { margin-bottom: 0; }
+  .logo-group-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem; gap: 1rem; }
+  .logo-group-name { font-family: 'Archivo', sans-serif; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; color: var(--white); }
+  .logo-download-all { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; background: transparent; border: 1px solid var(--rule); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); text-decoration: none; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
+  .logo-download-all:hover { background: var(--pll-yellow); color: var(--black); border-color: var(--pll-yellow); }
+  .logo-showcase { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; align-items: start; }
+  .logo-group[data-type="primary"] .logo-tile-img { padding: 4.5rem; aspect-ratio: 1.12; }
+  .logo-group[data-type="indigenous"] .logo-tile-img { padding: 4.5rem; aspect-ratio: 1.12; }
+  .logo-tile { border-radius: 6px; overflow: hidden; border: 1px solid var(--rule); display: flex; flex-direction: column; transition: border-color 0.2s ease, transform 0.25s ease; min-width: 0; width: 100%; }
+  .logo-tile:hover { border-color: var(--pll-yellow); transform: translateY(-3px); }
+  .logo-tile-img { aspect-ratio: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 40px; }
+  .logo-tile-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .logo-tile-meta { padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; border-top: 1px solid var(--rule); background: var(--ink); flex-wrap: wrap; }
+  .logo-tile-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); line-height: 1.5; }
+  .logo-tile-chips { display: flex; gap: 0.25rem; flex-shrink: 0; }
+  .mini-chip { padding: 0.3rem 0.5rem; background: transparent; border: 1px solid var(--rule); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: all 0.15s ease; }
+  .mini-chip:hover { background: var(--pll-yellow); color: var(--black); border-color: var(--pll-yellow); }
+  .logo-tile.hidden  { display: none; }
+  .logo-group.hidden { display: none; }
+  .bg-black  { background: #000000; }
+  .bg-yellow { background: #ffcb06; }
+  .bg-white  { background: #ffffff; }
+
+  /* ===== FILTER BAR ===== */
+  .logo-filters { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); margin-bottom: 2rem; }
+  .filter-group { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .filter-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-dim); margin-right: 0.2rem; white-space: nowrap; }
+  .filter-btn { padding: 0.3rem 0.75rem; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); background: none; border: 1px solid var(--rule); border-radius: 2px; cursor: pointer; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 0.35rem; }
+  .filter-btn:hover { color: var(--white); border-color: var(--gray-dim); }
+  .filter-btn .swatch-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .filter-btn.active[data-filter="type"]                          { color: var(--black); background: var(--white); border-color: var(--white); }
+  .filter-btn.active[data-value="all"][data-filter="color"]       { background: var(--gray-dim); color: var(--white); border-color: var(--gray-dim); }
+  .filter-btn.active[data-value="yellow"][data-filter="color"]    { background: #ffcb06; color: var(--black); border-color: #ffcb06; }
+  .filter-btn.active[data-value="black"][data-filter="color"]     { background: #000000; color: var(--white); border-color: #333333; }
+  .filter-btn.active[data-value="white"][data-filter="color"]     { background: #ffffff; color: var(--black); border-color: #ffffff; }
+
+  #event-allstar .bg-red { background: #ff0000; }
+  #event-allstar .bg-navy { background: #001d2b; }
+  #event-allstar .filter-btn.active[data-value="red"][data-filter="color"] { background: #ff0000; color: var(--white); border-color: #ff0000; }
+  #event-allstar .filter-btn.active[data-value="navy"][data-filter="color"] { background: #001d2b; color: var(--white); border-color: #001d2b; }
+  #event-allstar .logo-tile-img { padding: 1.5rem; }
+
+  /* ===== TEAM GRID ===== */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .team-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 4px;
+    background: var(--ink);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+  .team-card:hover { border-color: var(--pll-yellow); transform: translateY(-3px); }
+  .team-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--pll-yellow);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .team-card:hover::after { transform: scaleX(1); }
+
+  .team-card-logo {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+    background: var(--ink-2);
+    overflow: hidden;
+  }
+  .team-card-logo img { width: 100%; height: auto; max-height: 100%; object-fit: contain; display: block; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+  .team-card:hover .team-card-logo img { transform: scale(1.06); }
+
+  .team-card-meta {
+    padding: 0.85rem 1rem;
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  }
+  .team-card-name { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
+  .team-card-arrow { color: var(--gray-dim); transition: color 0.15s ease, transform 0.2s ease; flex-shrink: 0; }
+  .team-card-arrow svg { width: 12px; height: 12px; display: block; }
+  .team-card:hover .team-card-arrow { color: var(--pll-yellow); transform: translate(2px, -2px); }
+
+  .team-card:nth-child(1) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+  .team-card:nth-child(2) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
+  .team-card:nth-child(3) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
+  .team-card:nth-child(4) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
+  .team-card:nth-child(5) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+  .team-card:nth-child(6) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both; }
+  .team-card:nth-child(7) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both; }
+  .team-card:nth-child(8) { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.50s both; }
+
+  /* ===== FOOTER ===== */
+  .footer { max-width: 1400px; margin: 2rem auto 0; padding: 2rem 3rem 2.5rem; border-top: 1px solid var(--rule); display: flex; flex-direction: column; align-items: center; gap: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); }
+  .footer a { color: var(--pll-yellow); text-decoration: none; }
+  .footer-row { display: flex; justify-content: center; align-items: center; width: 100%; flex-wrap: wrap; gap: 1rem; }
+  .footer-logos { display: flex; align-items: center; gap: 0.85rem; text-decoration: none; }
+  .footer-logo { width: 52px; height: 52px; object-fit: contain; display: block; opacity: 0.2; transition: opacity 0.2s ease; }
+  .footer-logos:hover .footer-logo { opacity: 1; }
+  .footer-divider { width: 1px; height: 22px; background: var(--white); opacity: 0.2; transition: opacity 0.2s ease; }
+  .footer-logos:hover .footer-divider { opacity: 1; }
+
+  /* ===== MOTION ===== */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-inner { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+  .content .section { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
+
+  /* ===== EVENTS SECTION ===== */
+  .events-layout { display: grid; grid-template-columns: 1fr 3fr; gap: 0.75rem; align-items: start; }
+  .events-nav { display: flex; flex-direction: column; }
+  .event-tab { display: block; width: 100%; text-align: left; padding: 0.75rem 0 0.75rem 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-dim); background: none; border: none; border-left: 2px solid var(--rule); cursor: pointer; transition: all 0.15s ease; }
+  .event-tab:hover { color: var(--gray); border-left-color: var(--gray-dim); }
+  .event-tab.active { color: var(--white); border-left-color: var(--pll-yellow); }
+  .event-panel { display: none; }
+  .event-panel.active { display: block; }
+  .logo-placeholder { width: 55%; aspect-ratio: 1; border: 1px dashed rgba(255,255,255,0.15); border-radius: 2px; background: rgba(255,255,255,0.04); }
+  .logo-placeholder--wide { width: 80%; aspect-ratio: 3/1; }
+  .bg-white .logo-placeholder { border-color: rgba(0,0,0,0.15); background: rgba(0,0,0,0.04); }
+  .bg-yellow .logo-placeholder { border-color: rgba(0,0,0,0.2); background: rgba(0,0,0,0.06); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1100px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 1000px) {
+    .content, .footer { padding-left: 2rem; padding-right: 2rem; }
+    .hero-inner { padding-left: 2rem; padding-right: 2rem; }
+  }
+  @media (max-width: 800px) {
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-logo { width: 260px; height: 260px; }
+  }
+  @media (max-width: 600px) {
+    .content, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .hero-inner { padding-left: 1.25rem; padding-right: 1.25rem; flex-direction: column; gap: 2rem; }
+    .hero-logo { width: 180px; height: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="league-bar">
+    <a class="league-half pll-half active" id="btn-pll" href="http://localhost:8080/pll-teams.html" aria-label="PLL">
+      <span class="league-spell">Premier Lacrosse League</span>
+      <img class="league-mark mark-active" src="assets/header/PLL_Icon_FullColor.svg" alt="PLL" />
+      <img class="league-mark mark-inactive" src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" />
+    </a>
+    <a class="league-half wll-half" id="btn-wll" href="http://localhost:8080/wll-teams.html" aria-label="WLL">
+      <img class="league-mark mark-active" src="assets/header/WLL_Icon_3C.svg" alt="WLL" />
+      <img class="league-mark mark-inactive" src="assets/WLL/PNG/WLL_Icon_1Color_DarkBkg.png" alt="" />
+      <span class="league-spell">Women's Lacrosse League</span>
+    </a>
+  </div>
+  <nav class="topbar-teams" id="nav-pll">
+    <a class="topbar-team" href="teams/boston-cannons.html">
+      <img src="assets/header/BostonCannons_Icon_FullColor.svg" alt="Boston Cannons" />
+      <span>Boston</span>
+    </a>
+    <a class="topbar-team" href="teams/california-redwoods.html">
+      <img src="assets/header/CaliforniaRedwoods_Icon_FullColor.svg" alt="California Redwoods" />
+      <span>California</span>
+    </a>
+    <a class="topbar-team" href="teams/carolina-chaos.html">
+      <img src="assets/header/CarolinaChaos_Icon_FullColor.svg" alt="Carolina Chaos" />
+      <span>Carolina</span>
+    </a>
+    <a class="topbar-team" href="teams/denver-outlaws.html">
+      <img src="assets/header/DenverOutlaws_Pri_color_full.svg" alt="Denver Outlaws" />
+      <span>Denver</span>
+    </a>
+    <a class="topbar-team" href="teams/maryland-whipsnakes.html">
+      <img src="assets/header/MarylandWhipsnakes_Icon_FullColor.svg" alt="Maryland Whipsnakes" />
+      <span>Maryland</span>
+    </a>
+    <a class="topbar-team" href="teams/new-york-atlas.html">
+      <img src="assets/header/NewYorkAtlas_Icon__FullColor.svg" alt="New York Atlas" />
+      <span>New York</span>
+    </a>
+    <a class="topbar-team" href="teams/philadelphia-waterdogs.html">
+      <img src="assets/header/PhiladelphiaWaterdogs_Icon__FullColor.svg" alt="Philadelphia Waterdogs" />
+      <span>Philadelphia</span>
+    </a>
+    <a class="topbar-team" href="teams/utah-archers.html">
+      <img src="assets/header/UtahArchers_Icon_FullColor.svg" alt="Utah Archers" />
+      <span>Utah</span>
+    </a>
+  </nav>
+  <nav class="topbar-teams hidden" id="nav-wll">
+    <a class="topbar-team" href="teams/boston-guard.html">
+      <img src="assets/header/wll_boston_icon_fc_202526.svg" alt="Boston Guard" />
+      <span>Boston</span>
+    </a>
+    <a class="topbar-team" href="teams/california-palms.html">
+      <img src="assets/header/WLL_California_ICON_FULL.svg" alt="California Palms" />
+      <span>California</span>
+    </a>
+    <a class="topbar-team" href="teams/maryland-charm.html">
+      <img src="assets/header/WLL_Maryland_SEC_FULL (1).svg" alt="Maryland Charm" />
+      <span>Maryland</span>
+    </a>
+    <a class="topbar-team" href="teams/new-york-charging.html">
+      <img src="assets/header/WLL_NewYork_ICON_FULL.svg" alt="New York Charging" />
+      <span>New York</span>
+    </a>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1 class="hero-title">Premier<br/>Lacrosse<br/>League</h1>
+    </div>
+    <div class="hero-logo">
+      <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" alt="Premier Lacrosse League" />
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<main class="content">
+
+  <!-- 01 · PLL BRAND -->
+  <section class="section">
+    <div class="section-header" data-target="brand-body">
+      <span class="section-number">01 —</span>
+      <h2 class="section-title">PLL Brand</h2>
+      <button class="section-toggle" aria-label="Toggle section">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="section-body" id="brand-body">
+
+      <!-- FILTER BAR -->
+      <div class="logo-filters">
+        <div class="filter-group">
+          <span class="filter-label">Type</span>
+          <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+          <button class="filter-btn" data-filter="type" data-value="primary">Primary</button>
+          <button class="filter-btn" data-filter="type" data-value="wordmark">Wordmark</button>
+          <button class="filter-btn" data-filter="type" data-value="indigenous">Indigenous</button>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Color</span>
+          <button class="filter-btn active" data-filter="color" data-value="all">All</button>
+          <button class="filter-btn" data-filter="color" data-value="yellow">
+            <span class="swatch-dot" style="background:#ffcb06;"></span>Yellow
+          </button>
+          <button class="filter-btn" data-filter="color" data-value="black">
+            <span class="swatch-dot" style="background:#000000;border:1px solid #333;"></span>Black
+          </button>
+          <button class="filter-btn" data-filter="color" data-value="white">
+            <span class="swatch-dot" style="background:#ffffff;border:1px solid #555;"></span>White
+          </button>
+        </div>
+      </div>
+
+      <!-- PRIMARY (SHIELD) -->
+      <div class="logo-group" data-type="primary">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Primary</h3>
+          <a class="logo-download-all" href="assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+
+          <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="yellow">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" alt="PLL Shield Full Color" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL/PLL Shield/PNG/PLL_Shield_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black">
+              <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="PLL Shield White" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL/PLL Shield/PNG/PLL_Shield_White.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-yellow" data-invisible-on="black">
+            <div class="logo-tile-img bg-yellow">
+              <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_Black.svg" alt="PLL Shield Black" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL Shield/SVG/PLL_Shield_Black.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL/PLL Shield/PNG/PLL_Shield_Black.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- WORDMARK -->
+      <div class="logo-group" data-type="wordmark" style="margin-top:2.5rem;">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Wordmark</h3>
+          <a class="logo-download-all" href="assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+
+          <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="yellow,black">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_LightBG.svg" alt="PLL Wordmark Full Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_LightBG.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/PNG/PLL_Primary_FullColor_LghtBG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black">
+              <img src="assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" alt="PLL Wordmark Full Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/PNG/PLL_Primary_FullColor_DrkBG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black">
+              <img src="assets/PLL/PLL Wordmark/SVG/PLL_Primary_White.svg" alt="PLL Wordmark White" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/SVG/PLL_Primary_White.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/PNG/PLL_Primary_White.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-yellow" data-invisible-on="black">
+            <div class="logo-tile-img bg-yellow">
+              <img src="assets/PLL/PLL Wordmark/SVG/PLL_Primary_Black.svg" alt="PLL Wordmark Black" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/SVG/PLL_Primary_Black.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL/PLL Wordmark/PNG/PLL_Primary_Black.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- INDIGENOUS LOGO -->
+      <div class="logo-group" data-type="indigenous" style="margin-top:2.5rem;">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Indigenous Logo</h3>
+          <a class="logo-download-all" href="assets/PLL/PLL_Indigenous_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+
+          <div class="logo-tile" data-orig-bg="bg-white">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/PLL/PLL_Indigenous_FullColor.svg" alt="PLL Indigenous on White" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">White BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL_Indigenous_FullColor.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile-img bg-black">
+              <img src="assets/PLL/PLL_Indigenous_FullColor.svg" alt="PLL Indigenous on Black" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Black BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL_Indigenous_FullColor.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-yellow">
+            <div class="logo-tile-img bg-yellow">
+              <img src="assets/PLL/PLL_Indigenous_FullColor.svg" alt="PLL Indigenous on Yellow" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Yellow BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL/PLL_Indigenous_FullColor.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 02 · PLL TEAMS -->
+  <section class="section">
+    <div class="section-header" data-target="teams-body">
+      <span class="section-number">02 —</span>
+      <h2 class="section-title">PLL Teams</h2>
+      <button class="section-toggle" aria-label="Toggle section">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="section-body" id="teams-body">
+      <div class="team-grid" id="teamGrid"></div>
+    </div>
+  </section>
+
+  <!-- 03 · PLL EVENTS -->
+  <section class="section">
+    <div class="section-header" data-target="events-body">
+      <span class="section-number">03 —</span>
+      <h2 class="section-title">PLL Events</h2>
+      <button class="section-toggle" aria-label="Toggle section">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="section-body" id="events-body">
+      <div class="events-layout">
+        <nav class="events-nav" id="eventsNav"></nav>
+        <div id="eventsContent"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <a href="index.html" class="footer-logos">
+    <img class="footer-logo" src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="PLL" />
+    <span class="footer-divider"></span>
+    <img class="footer-logo" src="assets/WLL/PNG/WLL_Icon_1Color_DarkBkg.png" alt="WLL" />
+  </a>
+  <div class="footer-row">
+    <div>© Premier Lacrosse League 2026</div>
+  </div>
+</footer>
+
+<script>
+  const pllTeams = [
+    { slug: 'boston-cannons',         name: 'Boston Cannons',         logo: 'assets/CANNONS/SVG/BostonCannons_Primary_FullColor.svg',              color: '#091f40', secondary: '#c60c30',  text: '#ffffff' },
+    { slug: 'california-redwoods',    name: 'California Redwoods',    logo: 'assets/REDWOODS/SVG/CaliforniaRedwoods_Primary_FullColor.svg',        color: '#004b37', secondary: '#141414',  text: '#999999' },
+    { slug: 'carolina-chaos',         name: 'Carolina Chaos',         logo: 'assets/CHAOS/SVG/CarolinaChaos_Primary_FullColor.svg',                color: '#ff0000', secondary: '#141414',  text: '#999999' },
+    { slug: 'denver-outlaws',         name: 'Denver Outlaws',         logo: 'assets/OUTLAWS/SVG/DenverOutlaws_Primary_FullColor.svg',               color: '#000000', secondary: '#141414',  text: '#999999', pad: '3.5rem' },
+    { slug: 'maryland-whipsnakes',    name: 'Maryland Whipsnakes',    logo: 'assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_FullColor.svg',        color: '#000000', secondary: '#ff0000',  text: '#ffffff' },
+    { slug: 'new-york-atlas',         name: 'New York Atlas',         logo: 'assets/ATLAS/SVG/NewYorkAtlas_Primary_FullColor.svg',                 color: '#00b1ff', secondary: '#141414',  text: '#999999' },
+    { slug: 'philadelphia-waterdogs', name: 'Philadelphia Waterdogs', logo: 'assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Partial__FullColor.svg',               color: '#553dad', secondary: '#141414',  text: '#999999', pad: '1.7rem' },
+    { slug: 'utah-archers',           name: 'Utah Archers',           logo: 'assets/ARCHERS/SVG/UtahArchers_Primary_FullColor_onOrange.svg',       color: '#ff5216', secondary: '#141414',  text: '#ffffff' },
+  ];
+
+  const arrowSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>';
+
+  const grid = document.getElementById('teamGrid');
+  pllTeams.forEach(team => {
+    const a = document.createElement('a');
+    a.className = 'team-card';
+    a.href = `teams/${team.slug}.html`;
+    a.innerHTML = `
+      <div class="team-card-logo" style="background: ${team.color}; padding: ${team.pad || '2rem'};">
+        <img src="${team.logo}" alt="${team.name}" loading="lazy" />
+      </div>
+      <div class="team-card-meta">
+        <span class="team-card-name">${team.name}</span>
+        <span class="team-card-arrow">${arrowSVG}</span>
+      </div>
+    `;
+    grid.appendChild(a);
+  });
+
+  // Brand type filter (scoped to #brand-body)
+  document.querySelectorAll('#brand-body .filter-btn[data-filter="type"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#brand-body .filter-btn[data-filter="type"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('#brand-body .logo-group').forEach(g => {
+        g.classList.toggle('hidden', val !== 'all' && g.dataset.type !== val);
+      });
+    });
+  });
+
+  // Brand color filter (scoped to #brand-body)
+  document.querySelectorAll('#brand-body .filter-btn[data-filter="color"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#brand-body .filter-btn[data-filter="color"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('#brand-body .logo-tile').forEach(tile => {
+        const invisibleOn = (tile.dataset.invisibleOn || '').split(',').map(s => s.trim()).filter(Boolean);
+        const shouldHide = val !== 'all' && invisibleOn.includes(val);
+        tile.classList.toggle('hidden', shouldHide);
+        if (!shouldHide) {
+          const box = tile.querySelector('.logo-tile-img');
+          if (box) {
+            box.classList.remove('bg-yellow', 'bg-black', 'bg-white');
+            box.classList.add(val === 'all' ? tile.dataset.origBg : 'bg-' + val);
+          }
+        }
+      });
+    });
+  });
+
+  // ===== PLL EVENTS =====
+  const pllEvents = [
+    { id: 'allstar',      name: '2026 LEXUS ALL-STAR GAME' },
+    { id: 'draft',        name: 'College Draft' },
+    { id: 'snl',          name: 'Saturday Night Lacrosse' },
+  ];
+
+  function buildEventPanel() {
+    return `
+      <div class="logo-filters">
+        <div class="filter-group">
+          <span class="filter-label">Type</span>
+          <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+          <button class="filter-btn" data-filter="type" data-value="primary">Primary</button>
+          <button class="filter-btn" data-filter="type" data-value="wordmark">Wordmark</button>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Color</span>
+          <button class="filter-btn active" data-filter="color" data-value="all">All</button>
+          <button class="filter-btn" data-filter="color" data-value="yellow"><span class="swatch-dot" style="background:#ffcb06;"></span>Yellow</button>
+          <button class="filter-btn" data-filter="color" data-value="black"><span class="swatch-dot" style="background:#000000;border:1px solid #333;"></span>Black</button>
+          <button class="filter-btn" data-filter="color" data-value="white"><span class="swatch-dot" style="background:#ffffff;border:1px solid #555;"></span>White</button>
+        </div>
+      </div>
+      <div class="logo-group" data-type="primary">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Primary</h3>
+        </div>
+        <div class="logo-showcase">
+          <div class="logo-tile" data-orig-bg="bg-white">
+            <div class="logo-tile-img bg-white"><div class="logo-placeholder"></div></div>
+            <div class="logo-tile-meta"><span class="logo-tile-label">Full Color</span><div class="logo-tile-chips"><span class="mini-chip">SVG</span><span class="mini-chip">PNG</span></div></div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white">
+            <div class="logo-tile-img bg-black"><div class="logo-placeholder"></div></div>
+            <div class="logo-tile-meta"><span class="logo-tile-label">1-Color<br/>Dark BKG</span><div class="logo-tile-chips"><span class="mini-chip">SVG</span><span class="mini-chip">PNG</span></div></div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-yellow" data-invisible-on="black">
+            <div class="logo-tile-img bg-yellow"><div class="logo-placeholder"></div></div>
+            <div class="logo-tile-meta"><span class="logo-tile-label">1-Color<br/>Light BKG</span><div class="logo-tile-chips"><span class="mini-chip">SVG</span><span class="mini-chip">PNG</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="logo-group" data-type="wordmark" style="margin-top:2.5rem;">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Wordmark</h3>
+        </div>
+        <div class="logo-showcase">
+          <div class="logo-tile" data-orig-bg="bg-white">
+            <div class="logo-tile-img bg-white"><div class="logo-placeholder logo-placeholder--wide"></div></div>
+            <div class="logo-tile-meta"><span class="logo-tile-label">Full Color</span><div class="logo-tile-chips"><span class="mini-chip">SVG</span><span class="mini-chip">PNG</span></div></div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white">
+            <div class="logo-tile-img bg-black"><div class="logo-placeholder logo-placeholder--wide"></div></div>
+            <div class="logo-tile-meta"><span class="logo-tile-label">1-Color<br/>Dark BKG</span><div class="logo-tile-chips"><span class="mini-chip">SVG</span><span class="mini-chip">PNG</span></div></div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-yellow" data-invisible-on="black">
+            <div class="logo-tile-img bg-yellow"><div class="logo-placeholder logo-placeholder--wide"></div></div>
+            <div class="logo-tile-meta"><span class="logo-tile-label">1-Color<br/>Light BKG</span><div class="logo-tile-chips"><span class="mini-chip">SVG</span><span class="mini-chip">PNG</span></div></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildAllStarPanel() {
+    return `
+      <div class="logo-filters">
+        <div class="filter-group">
+          <span class="filter-label">Color</span>
+          <button class="filter-btn active" data-filter="color" data-value="all">All</button>
+          <button class="filter-btn" data-filter="color" data-value="navy"><span class="swatch-dot" style="background:#001d2b;border:1px solid #333;"></span>Navy</button>
+          <button class="filter-btn" data-filter="color" data-value="red"><span class="swatch-dot" style="background:#ff0000;border:1px solid #333;"></span>Red</button>
+          <button class="filter-btn" data-filter="color" data-value="white"><span class="swatch-dot" style="background:#ffffff;border:1px solid #555;"></span>White</button>
+        </div>
+      </div>
+      <div class="logo-group" data-type="primary">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Primary</h3>
+          <a class="logo-download-all" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+          <div class="logo-tile" data-orig-bg="bg-navy" data-invisible-on="red,white">
+            <div class="logo-tile-img bg-navy">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" alt="PLL All Star Game Full Color on Navy" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile hidden" data-orig-bg="bg-red" data-only-on="red">
+            <div class="logo-tile-img bg-red">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" alt="PLL All Star Game Full Color on Red" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile hidden" data-orig-bg="bg-white" data-only-on="white">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" alt="PLL All Star Game Full Color on White" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-red" data-invisible-on="white">
+            <div class="logo-tile-img bg-red">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Light.svg" alt="PLL All Star Game 1-Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Light.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_1Color_Light.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="red,navy">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Dark.svg" alt="PLL All Star Game 1-Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Dark.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_1Color_Dark.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildDraftPanel() {
+    return `
+      <div class="logo-filters">
+        <div class="filter-group">
+          <span class="filter-label">Color</span>
+          <button class="filter-btn active" data-filter="color" data-value="all">All</button>
+          <button class="filter-btn" data-filter="color" data-value="yellow"><span class="swatch-dot" style="background:#ffcb06;"></span>Yellow</button>
+          <button class="filter-btn" data-filter="color" data-value="black"><span class="swatch-dot" style="background:#000000;border:1px solid #333;"></span>Black</button>
+          <button class="filter-btn" data-filter="color" data-value="white"><span class="swatch-dot" style="background:#ffffff;border:1px solid #555;"></span>White</button>
+        </div>
+      </div>
+      <div class="logo-group" data-type="primary">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Logo</h3>
+          <a class="logo-download-all" href="assets/PLL COLLEGE DRAFT/SVG/PLL_2026_CollegeDraft_Logo_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+          <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="yellow">
+            <div class="logo-tile-img bg-white" style="padding: 1.5rem;">
+              <img src="assets/PLL COLLEGE DRAFT/SVG/PLL_2026_CollegeDraft_Logo_FullColor.svg" alt="PLL College Draft Logo Full Color" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL COLLEGE DRAFT/SVG/PLL_2026_CollegeDraft_Logo_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL COLLEGE DRAFT/PNG/PLL_2026_CollegeDraft_Logo_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black" style="padding: 1.5rem;">
+              <img src="assets/PLL COLLEGE DRAFT/SVG/PLL_2026_CollegeDraft_Logo_1Color_DarkBkg.svg" alt="PLL College Draft Logo 1-Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL COLLEGE DRAFT/SVG/PLL_2026_CollegeDraft_Logo_1Color_DarkBkg.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL COLLEGE DRAFT/PNG/PLL_2026_CollegeDraft_Logo_1Color_DarkBkg.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-yellow" data-invisible-on="black">
+            <div class="logo-tile-img bg-yellow" style="padding: 1.5rem;">
+              <img src="assets/PLL COLLEGE DRAFT/SVG/PLL_2026_CollegeDraft_Logo_1Color_LightBkg.svg" alt="PLL College Draft Logo 1-Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL COLLEGE DRAFT/SVG/PLL_2026_CollegeDraft_Logo_1Color_LightBkg.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/PLL COLLEGE DRAFT/PNG/PLL_2026_CollegeDraft_Logo_1Color_LightBkg.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildSNLPanel() {
+    return `
+      <div class="logo-filters">
+        <div class="filter-group">
+          <span class="filter-label">Type</span>
+          <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+          <button class="filter-btn" data-filter="type" data-value="primary">Primary</button>
+          <button class="filter-btn" data-filter="type" data-value="wordmark">Wordmark</button>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">Color</span>
+          <button class="filter-btn active" data-filter="color" data-value="all">All</button>
+          <button class="filter-btn" data-filter="color" data-value="yellow"><span class="swatch-dot" style="background:#ffcb06;"></span>Yellow</button>
+          <button class="filter-btn" data-filter="color" data-value="black"><span class="swatch-dot" style="background:#000000;border:1px solid #333;"></span>Black</button>
+          <button class="filter-btn" data-filter="color" data-value="white"><span class="swatch-dot" style="background:#ffffff;border:1px solid #555;"></span>White</button>
+        </div>
+      </div>
+      <div class="logo-group" data-type="primary">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Primary</h3>
+          <a class="logo-download-all" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_fullcolor_darkbkg.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+          <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="yellow,black">
+            <div class="logo-tile-img bg-white" style="padding: 3.25rem;">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_fullcolor_lightbkg.svg" alt="SNL Primary Full Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_fullcolor_lightbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black" style="padding: 3.25rem;">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_fullcolor_darkbkg.svg" alt="SNL Primary Full Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_fullcolor_darkbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black" style="padding: 3.25rem;">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_1color_darkbkg.svg" alt="SNL Primary 1-Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_1color_darkbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-yellow" data-invisible-on="black">
+            <div class="logo-tile-img bg-yellow" style="padding: 3.25rem;">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_1color_lightbkg.svg" alt="SNL Primary 1-Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_primary_1color_lightbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="logo-group" data-type="wordmark" style="margin-top:2.5rem;">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Wordmark</h3>
+          <a class="logo-download-all" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_fullcolor_darkbkg.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+          <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="yellow,black">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_fullcolor_lightbkg.svg" alt="SNL Wordmark Full Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_fullcolor_lightbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_fullcolor_darkbkg.svg" alt="SNL Wordmark Full Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_fullcolor_darkbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white,yellow">
+            <div class="logo-tile-img bg-black">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_1color_darkbkg.svg" alt="SNL Wordmark 1-Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_1color_darkbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-yellow" data-invisible-on="black">
+            <div class="logo-tile-img bg-yellow">
+              <img src="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_1c_lightbkg.svg" alt="SNL Wordmark 1-Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/PLL-SATURDAYNIGHTLACROSSE/SVG/pll_snl_logo_wordmark_1c_lightbkg.svg" download>SVG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildEventPanelFor(id) {
+    if (id === 'allstar') return buildAllStarPanel();
+    if (id === 'draft') return buildDraftPanel();
+    if (id === 'snl')   return buildSNLPanel();
+    return buildEventPanel();
+  }
+
+  const eventsNav     = document.getElementById('eventsNav');
+  const eventsContent = document.getElementById('eventsContent');
+
+  pllEvents.forEach((evt, i) => {
+    const tab = document.createElement('button');
+    tab.className = 'event-tab' + (i === 0 ? ' active' : '');
+    tab.dataset.event = evt.id;
+    tab.textContent = evt.name;
+    eventsNav.appendChild(tab);
+
+    const panel = document.createElement('div');
+    panel.className = 'event-panel' + (i === 0 ? ' active' : '');
+    panel.id = 'event-' + evt.id;
+    panel.innerHTML = buildEventPanelFor(evt.id);
+    eventsContent.appendChild(panel);
+  });
+
+  // Event tab switching
+  eventsNav.addEventListener('click', e => {
+    const tab = e.target.closest('.event-tab');
+    if (!tab) return;
+    eventsNav.querySelectorAll('.event-tab').forEach(t => t.classList.remove('active'));
+    eventsContent.querySelectorAll('.event-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('event-' + tab.dataset.event).classList.add('active');
+  });
+
+  // Event filter buttons (scoped to clicked panel via event delegation)
+  eventsContent.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn[data-filter]');
+    if (!btn) return;
+    const panel = btn.closest('.event-panel');
+    if (!panel) return;
+    const { filter, value } = btn.dataset;
+    panel.querySelectorAll(`.filter-btn[data-filter="${filter}"]`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (filter === 'type') {
+      panel.querySelectorAll('.logo-group').forEach(g => {
+        g.classList.toggle('hidden', value !== 'all' && g.dataset.type !== value);
+      });
+    } else if (filter === 'color') {
+      panel.querySelectorAll('.logo-tile').forEach(tile => {
+        const onlyOn = tile.dataset.onlyOn;
+        const invisibleOn = (tile.dataset.invisibleOn || '').split(',').map(s => s.trim()).filter(Boolean);
+        const shouldHide = onlyOn ? value !== onlyOn : (value !== 'all' && invisibleOn.includes(value));
+        tile.classList.toggle('hidden', shouldHide);
+        if (!shouldHide) {
+          const box = tile.querySelector('.logo-tile-img');
+          if (box) {
+            box.classList.remove('bg-yellow', 'bg-black', 'bg-white', 'bg-red', 'bg-navy');
+            box.classList.add(value === 'all' ? tile.dataset.origBg : 'bg-' + value);
+          }
+        }
+      });
+    }
+  });
+
+  // Collapsible sections
+  document.querySelectorAll('.section-header[data-target]').forEach(header => {
+    header.addEventListener('click', () => {
+      const body = document.getElementById(header.dataset.target);
+      const toggle = header.querySelector('.section-toggle');
+      const collapsed = body.classList.toggle('collapsed');
+      toggle.classList.toggle('collapsed', collapsed);
+    });
+  });
+
+  // WLL toggle
+  const btnWll = document.getElementById('btn-wll');
+  const navPll = document.getElementById('nav-pll');
+  const navWll = document.getElementById('nav-wll');
+  btnWll.addEventListener('click', e => {
+    e.preventDefault();
+    window.location.href = 'http://localhost:8080/wll-teams.html';
+  });
+</script>
+
+</body>
+</html>

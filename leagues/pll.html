@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Premier Lacrosse League — PLL Brand Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #000000;
+    --ink: #0a0a0a;
+    --ink-2: #141414;
+    --yellow: #ffc72c;
+    --white: #ffffff;
+    --gray: #999999;
+    --gray-dim: #555555;
+    --rule: #1f1f1f;
+    --team-primary: #ffc72c;
+    --team-on-primary: #000000;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Archivo', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    max-width: 1400px; margin: 0 auto;
+    padding: 1.5rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; flex-wrap: wrap;
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-back {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray);
+    text-decoration: none; transition: color 0.2s ease;
+  }
+  .nav-back:hover { color: var(--yellow); }
+  .nav-back svg { width: 14px; height: 14px; }
+  .topbar-meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-dim);
+    display: flex; gap: 1.5rem; align-items: center;
+  }
+  .topbar-meta .dot {
+    width: 6px; height: 6px; background: var(--team-primary);
+    border-radius: 50%; display: inline-block; margin-right: 0.5rem;
+    vertical-align: middle; box-shadow: 0 0 8px var(--team-primary);
+  }
+
+  /* HERO */
+  .hero {
+    position: relative; min-height: 540px;
+    display: flex; align-items: center;
+    overflow: hidden; border-bottom: 1px solid var(--rule);
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 25% 50%, rgba(255,199,44,0.12) 0%, transparent 60%),
+      var(--black);
+  }
+  .hero-bg::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(-45deg,
+      transparent 0px, transparent 80px,
+      rgba(255,255,255,0.015) 80px, rgba(255,255,255,0.015) 81px);
+    opacity: 0.6;
+  }
+  .hero-inner {
+    position: relative; z-index: 1;
+    max-width: 1400px; margin: 0 auto;
+    padding: 4rem 3rem;
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: 4rem; align-items: center; width: 100%;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow-line { width: 40px; height: 1px; background: var(--gray-dim); }
+  .hero-title {
+    font-family: 'Archivo', sans-serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 900; line-height: 0.88;
+    letter-spacing: -0.04em; text-transform: uppercase;
+    color: var(--white); margin-bottom: 1.5rem;
+  }
+  .hero-description {
+    font-size: 1.05rem; line-height: 1.55;
+    color: var(--gray); max-width: 32rem;
+  }
+  .hero-showcase {
+    position: relative; aspect-ratio: 1; max-width: 460px;
+    margin-left: auto; background: var(--team-primary);
+    border-radius: 8px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2.5rem;
+    box-shadow: 0 30px 60px -20px rgba(255,199,44,0.3);
+  }
+  .hero-showcase::before {
+    content: ''; position: absolute;
+    top: -50%; right: -20%; width: 60%; height: 200%;
+    background: rgba(0,0,0,0.18); transform: rotate(20deg); z-index: 1;
+  }
+  .hero-showcase-mark {
+    position: relative; z-index: 3; width: 75%;
+    display: flex; align-items: center; justify-content: center;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+  }
+  .hero-showcase-mark img { width: 100%; height: auto; }
+
+  /* TOP LOGO SECTION */
+  .top-logos {
+    max-width: 1400px; margin: 0 auto;
+    padding: 3rem 3rem 2.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* PLL LOGO BANNER */
+  .pll-logo-banner {
+    max-width: 1400px; margin: 0 auto;
+    padding: 3rem 3rem 2rem;
+    display: flex; align-items: center; gap: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .pll-logo-banner img {
+    height: 80px; width: auto;
+  }
+
+  /* LOGO SHOWCASE LAYOUT */
+  .logo-showcase {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem; margin-bottom: 3.5rem; align-items: start;
+  }
+  .logo-showcase:last-child { margin-bottom: 0; }
+  .logo-showcase-hero {
+    background: var(--black); border: 1px solid var(--rule);
+    border-radius: 6px; padding: 2.5rem;
+    display: flex; align-items: center; justify-content: center;
+    aspect-ratio: 1;
+  }
+  .logo-showcase-hero.light { background: var(--white); }
+  .logo-showcase-hero img { width: 100%; height: auto; object-fit: contain; display: block; }
+  .logo-showcase-right { display: flex; flex-direction: column; gap: 1.25rem; }
+  .logo-showcase-heading {
+    font-family: 'Archivo', sans-serif; font-size: 1.75rem; font-weight: 900;
+    text-transform: uppercase; letter-spacing: -0.02em; color: var(--white);
+  }
+  .logo-showcase-download {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 0.85rem; background: transparent;
+    border: 1px solid var(--rule); border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray);
+    text-decoration: none; cursor: pointer; transition: all 0.15s ease; width: fit-content;
+  }
+  .logo-showcase-download:hover { background: var(--team-primary); color: var(--black); border-color: var(--team-primary); }
+  .logo-showcase-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+
+  .logo-tile {
+    border-radius: 6px; overflow: hidden; border: 1px solid var(--rule);
+    display: flex; flex-direction: column;
+    transition: border-color 0.2s ease, transform 0.25s ease;
+  }
+  .logo-tile:hover { border-color: var(--team-primary); transform: translateY(-3px); }
+  .logo-tile-img { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  .logo-tile img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .logo-tile-meta {
+    padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;
+    gap: 0.5rem; border-top: 1px solid var(--rule); background: var(--ink); flex-wrap: wrap;
+  }
+  .logo-tile-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); line-height: 1.5; }
+  .logo-tile-chips { display: flex; gap: 0.25rem; flex-shrink: 0; }
+
+  /* CONTENT */
+  .content { max-width: 1400px; margin: 0 auto; padding: 4rem 3rem; }
+  .section { margin-bottom: 5rem; }
+
+  .section-header {
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 2rem; align-items: baseline;
+    padding-bottom: 1rem; border-bottom: 1px solid var(--rule);
+    margin-bottom: 2rem;
+  }
+  .section-number {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 0.2em; color: var(--team-primary);
+  }
+  .section-title {
+    font-family: 'Archivo', sans-serif; font-size: 1.5rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.01em;
+  }
+  .section-count {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-dim);
+  }
+
+  /* LOGO GROUPS */
+  .logo-group { margin-bottom: 2.5rem; }
+  .logo-group:last-child { margin-bottom: 0; }
+
+  .logo-group-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 0.75rem; margin-bottom: 1rem;
+    border-bottom: 1px solid var(--rule);
+    gap: 1rem; flex-wrap: wrap;
+  }
+  .logo-group-title {
+    display: flex; align-items: baseline; gap: 0.9rem;
+    font-family: 'Archivo', sans-serif;
+    font-size: 1.15rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.02em;
+  }
+  .logo-group-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--team-primary); font-weight: 500;
+  }
+  .logo-group-download-all {
+    padding: 0.45rem 0.8rem;
+    background: transparent; border: 1px solid var(--rule); border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray);
+    text-decoration: none; cursor: pointer; transition: all 0.15s ease;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .logo-group-download-all:hover {
+    background: var(--team-primary); color: var(--black); border-color: var(--team-primary);
+  }
+
+  .logo-variants {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  .logo-variant {
+    background: var(--ink); border: 1px solid var(--rule);
+    border-radius: 6px; overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: border-color 0.2s ease, transform 0.25s ease;
+  }
+  .logo-variant:hover { border-color: var(--team-primary); transform: translateY(-3px); }
+  .logo-variant-preview {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.75rem;
+  }
+  /* PLL color tiles: White / Yellow / Black */
+  .bg-full   { background: #ffffff; }
+  .bg-yellow { background: #ffcb06; }
+  .bg-black  { background: #000000; }
+  /* used in logo-tile-img */
+  .logo-tile-img.bg-full   { background: #ffffff; }
+  .logo-tile-img.bg-yellow { background: #ffcb06; }
+  .logo-tile-img.bg-black  { background: #000000; }
+  .logo-variant-preview img { max-width: 100%; max-height: 100%; display: block; object-fit: contain; }
+  .logo-variant-meta {
+    padding: 0.9rem 1rem;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 0.75rem; border-top: 1px solid var(--rule);
+  }
+  .logo-variant-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gray);
+  }
+  .logo-variant-downloads { display: flex; gap: 0.25rem; }
+  .mini-chip {
+    padding: 0.3rem 0.5rem; background: transparent;
+    border: 1px solid var(--rule); border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray); text-decoration: none; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .mini-chip:hover { background: var(--team-primary); color: var(--black); border-color: var(--team-primary); }
+
+  /* COLOR PALETTE */
+  .palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .swatch { border-radius: 6px; overflow: hidden; border: 1px solid var(--rule); transition: transform 0.3s ease; cursor: pointer; }
+  .swatch:hover { transform: translateY(-3px); }
+  .swatch-color { aspect-ratio: 4/3; position: relative; }
+  .copy-hint {
+    position: absolute; bottom: 12px; right: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.3rem 0.55rem; background: rgba(0,0,0,0.4);
+    color: var(--white); border-radius: 2px;
+    opacity: 0; transition: opacity 0.2s ease;
+  }
+  .swatch:hover .copy-hint { opacity: 1; }
+  .swatch-light .copy-hint { background: rgba(0,0,0,0.7); }
+  .swatch-info { background: var(--ink); padding: 1rem 1.25rem; border-top: 1px solid var(--rule); }
+  .swatch-role { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-dim); margin-bottom: 0.25rem; }
+  .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 500; color: var(--white); }
+  .swatch-name { font-family: 'Archivo', sans-serif; font-size: 0.8rem; color: var(--gray); margin-top: 0.15rem; }
+  .swatch-pms { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--gray-dim); margin-top: 0.35rem; }
+
+  /* PRESS KIT */
+  .press-kit {
+    display: grid; grid-template-columns: 0.9fr 1.1fr;
+    gap: 2rem; background: var(--ink); border: 1px solid var(--rule);
+    border-radius: 8px; overflow: hidden;
+  }
+  .press-kit-visual {
+    position: relative; background: var(--team-primary);
+    padding: 3rem; display: flex; align-items: flex-end;
+    min-height: 380px; overflow: hidden;
+  }
+  .press-kit-visual::before {
+    content: ''; position: absolute; top: -30%; right: -30%;
+    width: 80%; height: 160%; background: rgba(0,0,0,0.15);
+    transform: rotate(22deg); z-index: 1;
+  }
+  .press-kit-visual-inner { position: relative; z-index: 3; color: var(--team-on-primary); width: 100%; }
+  .press-kit-badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 0.4rem 0.7rem; background: var(--team-on-primary);
+    color: var(--team-primary); border-radius: 2px; margin-bottom: 1.5rem;
+  }
+  .press-kit-visual-title {
+    font-family: 'Archivo', sans-serif; font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900; line-height: 0.95; letter-spacing: -0.03em;
+    text-transform: uppercase; margin-bottom: 1.25rem;
+  }
+  .press-kit-visual-meta {
+    display: flex; gap: 1.5rem; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--team-on-primary); opacity: 0.75;
+    padding-top: 1rem; border-top: 1px solid currentColor; flex-wrap: wrap;
+  }
+  .press-kit-info { padding: 3rem 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .press-kit-description { font-size: 0.95rem; line-height: 1.6; color: var(--gray); }
+  .press-kit-contents { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem 2rem; }
+  .press-kit-contents li { display: flex; align-items: baseline; gap: 0.75rem; font-family: 'Archivo', sans-serif; font-size: 0.9rem; color: var(--white); padding: 0.3rem 0; }
+  .press-kit-contents li span { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--team-primary); min-width: 20px; }
+  .press-kit-downloads { display: flex; gap: 0.6rem; flex-wrap: wrap; padding-top: 0.5rem; }
+  .press-kit-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.85rem 1.25rem; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    text-decoration: none; cursor: pointer; transition: all 0.15s ease; white-space: nowrap;
+  }
+  .press-kit-btn svg { width: 12px; height: 12px; }
+  .press-kit-btn.primary { background: var(--team-primary); color: var(--black); border: 1px solid var(--team-primary); font-weight: 500; }
+  .press-kit-btn.primary:hover { background: var(--white); border-color: var(--white); }
+  .press-kit-btn.secondary { background: transparent; color: var(--gray); border: 1px solid var(--rule); }
+  .press-kit-btn.secondary:hover { background: var(--ink-2); color: var(--white); border-color: var(--gray-dim); }
+  .press-kit-meta { display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); padding-top: 0.5rem; border-top: 1px solid var(--rule); }
+
+  /* FOOTER */
+  .footer {
+    max-width: 1400px; margin: 2rem auto 0;
+    padding: 2rem 3rem 2.5rem; border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gray-dim); flex-wrap: wrap; gap: 1rem;
+  }
+  .footer a { color: var(--team-primary); text-decoration: none; }
+
+  /* MOTION */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-inner > * { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .hero-inner > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-inner > *:nth-child(2) { animation-delay: 0.2s; }
+  .top-logos { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.25s; }
+  .content .section { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .content .section:nth-child(1) { animation-delay: 0.3s; }
+  .content .section:nth-child(2) { animation-delay: 0.4s; }
+  .content .section:nth-child(3) { animation-delay: 0.5s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1000px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 3rem; padding: 3rem 2rem; }
+    .hero-showcase { max-width: 320px; margin: 0 auto; }
+    .topbar, .pll-logo-banner, .top-logos, .content, .footer { padding-left: 2rem; padding-right: 2rem; }
+    .logo-showcase { grid-template-columns: 1fr; }
+    .press-kit { grid-template-columns: 1fr; }
+    .press-kit-visual { min-height: 260px; padding: 2rem; }
+    .press-kit-info { padding: 2rem; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 550px) {
+    .topbar, .pll-logo-banner, .top-logos, .content, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .hero-inner { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .logo-showcase-tiles { grid-template-columns: repeat(2, 1fr); }
+    .press-kit-contents { grid-template-columns: 1fr; }
+    .press-kit-downloads { flex-direction: column; align-items: stretch; }
+    .press-kit-btn { justify-content: center; }
+    .section-header { grid-template-columns: auto 1fr; }
+    .section-count { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="page">
+
+  <div class="topbar">
+    <a class="nav-back" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      Brand Portal
+    </a>
+    <div class="topbar-meta">
+      <span><span class="dot"></span>League Brand</span>
+      <span>Est. 2018</span>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-line"></span>
+          League Brand / Est. 2018
+        </div>
+        <h1 class="hero-title">Premier<br/>Lacrosse<br/>League</h1>
+        <p class="hero-description">
+          Official brand assets for the Premier Lacrosse League — the premier professional men's
+          lacrosse organization. Access logos, color systems, guidelines, and approved media for external use.
+        </p>
+      </div>
+      <div class="hero-showcase">
+        <div class="hero-showcase-mark">
+          <img src="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" alt="Premier Lacrosse League" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLL LOGO BANNER -->
+  <div class="pll-logo-banner">
+    <img src="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" alt="Premier Lacrosse League" />
+  </div>
+
+  <!-- TOP LOGO SECTION -->
+  <div class="top-logos">
+
+    <!-- PLL WORDMARK -->
+    <div class="logo-showcase">
+      <div class="logo-showcase-hero">
+        <img src="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" alt="PLL Wordmark Full Color Dark BG" />
+      </div>
+      <div class="logo-showcase-right">
+        <h3 class="logo-showcase-heading">PLL Wordmark</h3>
+        <a class="logo-showcase-download" href="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_DrkBG.svg" download>
+          Download all
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+        </a>
+        <div class="logo-showcase-tiles">
+          <div class="logo-tile">
+            <div class="logo-tile-img bg-full">
+              <img src="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_LghtBG.svg" alt="Wordmark Full Color Light BG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color<br/>Light Background</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_FullColor_LghtBG.svg" download>SVG</a>
+                <a class="mini-chip" href="../assets/PLL/PLL Wordmark/PNG/PLL_Primary_FullColor_LghtBG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile">
+            <div class="logo-tile-img bg-yellow">
+              <img src="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_Black.svg" alt="Wordmark Black on Yellow" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>On Yellow</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_Black.svg" download>SVG</a>
+                <a class="mini-chip" href="../assets/PLL/PLL Wordmark/PNG/PLL_Primary_Black.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile">
+            <div class="logo-tile-img bg-black">
+              <img src="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_White.svg" alt="Wordmark White on Black" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>On Black</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="../assets/PLL/PLL Wordmark/SVG/PLL_Primary_White.svg" download>SVG</a>
+                <a class="mini-chip" href="../assets/PLL/PLL Wordmark/PNG/PLL_Primary_White.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLL SHIELD -->
+    <div class="logo-showcase">
+      <div class="logo-showcase-hero">
+        <img src="../assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" alt="PLL Shield Full Color" />
+      </div>
+      <div class="logo-showcase-right">
+        <h3 class="logo-showcase-heading">PLL Shield</h3>
+        <a class="logo-showcase-download" href="../assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" download>
+          Download all
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+        </a>
+        <div class="logo-showcase-tiles">
+          <div class="logo-tile">
+            <div class="logo-tile-img bg-full">
+              <img src="../assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" alt="Shield Full Color" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="../assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="../assets/PLL/PLL Shield/PNG/PLL_Shield_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile">
+            <div class="logo-tile-img bg-yellow">
+              <img src="../assets/PLL/PLL Shield/SVG/PLL_Shield_Black.svg" alt="Shield Black on Yellow" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>On Yellow</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="../assets/PLL/PLL Shield/SVG/PLL_Shield_Black.svg" download>SVG</a>
+                <a class="mini-chip" href="../assets/PLL/PLL Shield/PNG/PLL_Shield_Black.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile">
+            <div class="logo-tile-img bg-black">
+              <img src="../assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="Shield White on Black" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>On Black</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="../assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" download>SVG</a>
+                <a class="mini-chip" href="../assets/PLL/PLL Shield/PNG/PLL_Shield_White.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="content">
+
+    <!-- 01 · LOGOS & MARKS -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">01 —</div>
+        <h2 class="section-title">Logos &amp; Marks</h2>
+        <div class="section-count">SVG + PNG</div>
+      </div>
+
+      <div class="logo-group">
+        <div class="logo-group-header">
+          <div class="logo-group-title">
+            <span class="logo-group-number">01 /</span>
+            Primary Logo
+          </div>
+          <a class="logo-group-download-all" data-download="pll-primary-all.zip">
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-variants">
+          <div class="logo-variant">
+            <div class="logo-variant-preview bg-full"></div>
+            <div class="logo-variant-meta">
+              <span class="logo-variant-label">Full Color</span>
+              <div class="logo-variant-downloads">
+                <a class="mini-chip" data-download="pll-primary-full.svg">SVG</a>
+                <a class="mini-chip" data-download="pll-primary-full.png">PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-variant">
+            <div class="logo-variant-preview bg-yellow"></div>
+            <div class="logo-variant-meta">
+              <span class="logo-variant-label">On Yellow</span>
+              <div class="logo-variant-downloads">
+                <a class="mini-chip" data-download="pll-primary-yellow.svg">SVG</a>
+                <a class="mini-chip" data-download="pll-primary-yellow.png">PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-variant">
+            <div class="logo-variant-preview bg-black"></div>
+            <div class="logo-variant-meta">
+              <span class="logo-variant-label">On Black</span>
+              <div class="logo-variant-downloads">
+                <a class="mini-chip" data-download="pll-primary-black.svg">SVG</a>
+                <a class="mini-chip" data-download="pll-primary-black.png">PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="logo-group">
+        <div class="logo-group-header">
+          <div class="logo-group-title">
+            <span class="logo-group-number">02 /</span>
+            Wordmark
+          </div>
+          <a class="logo-group-download-all" data-download="pll-wordmark-all.zip">
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-variants">
+          <div class="logo-variant">
+            <div class="logo-variant-preview bg-full"></div>
+            <div class="logo-variant-meta">
+              <span class="logo-variant-label">Full Color</span>
+              <div class="logo-variant-downloads">
+                <a class="mini-chip" data-download="pll-wordmark-full.svg">SVG</a>
+                <a class="mini-chip" data-download="pll-wordmark-full.png">PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-variant">
+            <div class="logo-variant-preview bg-yellow"></div>
+            <div class="logo-variant-meta">
+              <span class="logo-variant-label">On Yellow</span>
+              <div class="logo-variant-downloads">
+                <a class="mini-chip" data-download="pll-wordmark-yellow.svg">SVG</a>
+                <a class="mini-chip" data-download="pll-wordmark-yellow.png">PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-variant">
+            <div class="logo-variant-preview bg-black"></div>
+            <div class="logo-variant-meta">
+              <span class="logo-variant-label">On Black</span>
+              <div class="logo-variant-downloads">
+                <a class="mini-chip" data-download="pll-wordmark-black.svg">SVG</a>
+                <a class="mini-chip" data-download="pll-wordmark-black.png">PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · BRAND COLORS -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">02 —</div>
+        <h2 class="section-title">Brand Colors</h2>
+        <div class="section-count">Click to copy hex</div>
+      </div>
+      <div class="palette">
+        <div class="swatch swatch-light" data-hex="#FFC72C">
+          <div class="swatch-color" style="background:#FFC72C;">
+            <span class="copy-hint">Copy hex</span>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-role">Primary</div>
+            <div class="swatch-hex">#FFC72C</div>
+            <div class="swatch-name">PLL Yellow</div>
+            <div class="swatch-pms">PMS 116 C</div>
+          </div>
+        </div>
+        <div class="swatch" data-hex="#000000">
+          <div class="swatch-color" style="background:#000000;">
+            <span class="copy-hint">Copy hex</span>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-role">Secondary</div>
+            <div class="swatch-hex">#000000</div>
+            <div class="swatch-name">Black</div>
+            <div class="swatch-pms">PMS Black C</div>
+          </div>
+        </div>
+        <div class="swatch swatch-light" data-hex="#FFFFFF">
+          <div class="swatch-color" style="background:#FFFFFF; border: 1px solid #1f1f1f;">
+            <span class="copy-hint">Copy hex</span>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-role">Tertiary</div>
+            <div class="swatch-hex">#FFFFFF</div>
+            <div class="swatch-name">White</div>
+            <div class="swatch-pms">—</div>
+          </div>
+        </div>
+        <div class="swatch" data-hex="#999999">
+          <div class="swatch-color" style="background:#999999;">
+            <span class="copy-hint">Copy hex</span>
+          </div>
+          <div class="swatch-info">
+            <div class="swatch-role">Neutral</div>
+            <div class="swatch-hex">#999999</div>
+            <div class="swatch-name">Mid Gray</div>
+            <div class="swatch-pms">PMS Cool Gray 7 C</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · PRESS & MEDIA KIT -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-number">03 —</div>
+        <h2 class="section-title">Press &amp; Media Kit</h2>
+        <div class="section-count">Downloads for external partners</div>
+      </div>
+
+      <div class="press-kit">
+        <div class="press-kit-visual">
+          <div class="press-kit-visual-inner">
+            <div class="press-kit-badge">Press Kit / Premier Lacrosse League</div>
+            <div class="press-kit-visual-title">Everything<br/>you need.</div>
+            <div class="press-kit-visual-meta">
+              <span>Last updated · Apr 2026</span>
+              <span>Ver. 2.0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="press-kit-info">
+          <div class="press-kit-description">
+            A complete bundle for media partners, broadcasters, and editorial use. Includes official league
+            boilerplate, history, approved photography, key executive bios, fact sheets, and broadcast graphics.
+            All assets cleared for external publication under PLL media usage terms.
+          </div>
+
+          <ul class="press-kit-contents">
+            <li><span>01</span> League boilerplate &amp; history</li>
+            <li><span>02</span> Executive &amp; commissioner bios</li>
+            <li><span>03</span> Approved photography library</li>
+            <li><span>04</span> Broadcast &amp; digital graphics</li>
+            <li><span>05</span> Season &amp; milestone fact sheets</li>
+            <li><span>06</span> Logo variants (see section 01)</li>
+          </ul>
+
+          <div class="press-kit-downloads">
+            <a class="press-kit-btn primary" data-download="pll-press-kit-full.zip">
+              Download full kit
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+            </a>
+            <a class="press-kit-btn secondary" data-download="pll-brand-guidelines.pdf">
+              Brand guidelines (PDF)
+            </a>
+          </div>
+
+          <div class="press-kit-meta">
+            <span>38.2 MB</span>
+            <span>·</span>
+            <span>ZIP archive</span>
+            <span>·</span>
+            <span>Cleared for editorial use</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <div>© Premier Lacrosse League 2026</div>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('[data-download]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      const filename = el.getAttribute('data-download');
+      alert('[ Demo ] This would download: ' + filename);
+    });
+  });
+
+  document.querySelectorAll('.swatch[data-hex]').forEach(el => {
+    el.addEventListener('click', async () => {
+      const hex = el.getAttribute('data-hex');
+      try {
+        await navigator.clipboard.writeText(hex);
+        const hint = el.querySelector('.copy-hint');
+        if (hint) {
+          const orig = hint.textContent;
+          hint.textContent = 'Copied ✓';
+          setTimeout(() => { hint.textContent = orig; }, 1200);
+        }
+      } catch (err) { console.warn('Clipboard unavailable', err); }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Maryland Whipsnakes — PLL Brand Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #000000;
+    --ink: #0a0a0a;
+    --ink-2: #141414;
+    --white: #ffffff;
+    --gray: #999999;
+    --gray-dim: #555555;
+    --rule: #1f1f1f;
+    --team-primary: #ffcb06;
+    --team-on-primary: #000000;
+    --team-secondary: #ff0000;
+    --team-wedge: #ff0000;
+    --brand-primary: #3ddbc2;
+    --brand-secondary: #ff0000;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--black); color: var(--white); font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+  /* TOP BAR */
+  .topbar { border-bottom: 1px solid var(--rule); background: var(--ink); position: sticky; top: 0; z-index: 100; }
+
+  /* League toggle buttons — PLL left, WLL right */
+  .league-bar { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--rule); }
+  .league-half { position: relative; display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1.75rem; background: none; cursor: pointer; transition: background 0.15s ease; text-decoration: none; color: var(--white); }
+  .league-half.pll-half { justify-content: flex-end; border-right: 1px solid var(--rule); }
+  .league-half.wll-half { justify-content: flex-start; }
+  .league-half:hover { background: rgba(255,255,255,0.04); }
+  .league-mark { width: 34px; height: 34px; object-fit: contain; display: none; }
+  .league-half .mark-active { opacity: 1; }
+  .league-half.active .mark-active { display: block; }
+  .league-half .mark-inactive { opacity: 0.1; }
+  .league-half:not(.active) .mark-inactive { display: block; }
+  .league-spell { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.50em; text-transform: uppercase; white-space: nowrap; font-weight: 500; color: #ffcb06; opacity: 0.1; }
+  .league-half.active .league-spell { opacity: 1; }
+
+  /* Team nav */
+  .topbar-teams { display: flex; align-items: stretch; }
+  .topbar-teams.hidden { display: none; }
+  .topbar-team { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.1rem 0.5rem; text-decoration: none; color: var(--gray-dim); transition: all 0.15s ease; white-space: nowrap; flex: 1; border-right: 1px solid var(--rule); position: relative; }
+  .topbar-team:first-child { border-left: 1px solid var(--rule); }
+  .topbar-team:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  .topbar-team.active { color: var(--white); background: var(--ink); }
+  .topbar-team.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--brand-secondary); }
+  .topbar-team img { width: 32px; height: 32px; object-fit: contain; display: block; opacity: 0.45; transition: opacity 0.15s ease; }
+  .topbar-team:hover img, .topbar-team.active img { opacity: 1; }
+  .topbar-team span { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
+  .topbar-team.active span { color: var(--white); }
+
+  /* HERO */
+  .hero {
+    position: relative; min-height: 400px;
+    display: flex; align-items: center; overflow: hidden;
+    border-bottom: 3px solid var(--brand-primary);
+    background: var(--black);
+  }
+  .hero-inner {
+    position: relative; z-index: 2;
+    max-width: 1400px; margin: 0 auto; padding: 1.5rem 3rem; width: 100%;
+    display: flex; align-items: center; justify-content: space-between; gap: 4rem;
+  }
+  .hero-text { flex: 1; }
+  .hero-title { font-family: 'Archivo', sans-serif; font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 0.88; letter-spacing: -0.04em; text-transform: uppercase; color: var(--white); }
+  .hero-logo { flex-shrink: 0; width: 432px; height: 432px; }
+  .hero-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  /* CONTENT */
+  .content { max-width: 1400px; margin: 0 auto; padding: 4rem 3rem; }
+  .section { margin-bottom: 5rem; }
+  .section-header { display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: baseline; padding-bottom: 1rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.75rem; }
+  .section-number { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.2em; color: var(--team-primary); }
+  .section-title { font-family: 'Archivo', sans-serif; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; }
+  .section-count { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-dim); }
+  .section-toggle { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: none; border: 1px solid var(--rule); border-radius: 2px; color: var(--gray-dim); cursor: pointer; transition: all 0.15s ease; flex-shrink: 0; }
+  .section-toggle:hover { border-color: var(--gray-dim); color: var(--white); }
+  .section-toggle svg { width: 12px; height: 12px; transition: transform 0.25s ease; }
+  .section-toggle.collapsed svg { transform: rotate(-90deg); }
+  .section-body { overflow: hidden; transition: opacity 0.25s ease; }
+  .section-body.collapsed { display: none; }
+
+  /* ===== FILTER BAR ===== */
+  .logo-filters {
+    display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 2rem;
+  }
+  .filter-group { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .filter-label { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-dim); margin-right: 0.2rem; white-space: nowrap; }
+
+  .filter-btn {
+    padding: 0.3rem 0.75rem;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gray-dim); background: none;
+    border: 1px solid var(--rule); border-radius: 2px;
+    cursor: pointer; transition: all 0.15s ease;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+  }
+  .filter-btn .swatch-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .filter-btn:hover { color: var(--white); border-color: var(--gray-dim); }
+
+  /* Active states per filter type */
+  .filter-btn.active[data-filter="type"]   { color: var(--black); background: var(--white); border-color: var(--white); }
+  .filter-btn.active[data-filter="format"] { color: var(--black); background: var(--brand-primary); border-color: var(--brand-primary); }
+  /* Color active states — match the color itself */
+  .filter-btn.active[data-value="all"][data-filter="color"]  { background: var(--gray-dim); color: var(--white); border-color: var(--gray-dim); }
+  .filter-btn.active[data-value="black"] { background: #333; color: var(--white); border-color: #555; }
+  .filter-btn.active[data-value="red"]   { background: #ff0000; color: var(--white); border-color: #ff0000; }
+  .filter-btn.active[data-value="teal"]  { background: var(--brand-primary); color: var(--black); border-color: var(--brand-primary); }
+  .filter-btn.active[data-value="white"] { background: #ffffff; color: var(--black); border-color: #ffffff; }
+
+  /* ===== LOGO GROUPS ===== */
+  .logo-group { margin-bottom: 2.75rem; }
+  .logo-group:last-child { margin-bottom: 0; }
+  .logo-group.hidden { display: none; }
+  .logo-tile.hidden { display: none; }
+
+  .logo-group-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem; gap: 1rem; }
+  .logo-group-name { font-family: 'Archivo', sans-serif; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; color: var(--white); }
+
+  .logo-download-all {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.4rem 0.8rem; background: transparent;
+    border: 1px solid var(--rule); border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray);
+    text-decoration: none; cursor: pointer; transition: all 0.15s ease; white-space: nowrap;
+  }
+  .logo-download-all:hover { background: var(--brand-primary); color: var(--black); border-color: var(--brand-primary); }
+
+  /* ===== SHOWCASE: 4 equal columns — hero + 3 tiles as direct grid children ===== */
+  .logo-showcase {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+  }
+
+  /* Hero — white bg */
+  .logo-showcase-hero {
+    background: var(--white); border-radius: 6px;
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem; overflow: hidden;
+  }
+  .logo-showcase-hero img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  /* Tiles */
+  .logo-tile { border-radius: 6px; overflow: hidden; border: 1px solid var(--rule); display: flex; flex-direction: column; transition: border-color 0.2s ease, transform 0.25s ease; min-width: 0; width: 100%; }
+  .logo-tile:hover { border-color: var(--brand-primary); transform: translateY(-3px); }
+
+  .logo-tile-img {
+    aspect-ratio: 1;
+    width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    transition: background 0.2s ease;
+  }
+  .logo-tile-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  .logo-tile-meta { padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; border-top: 1px solid var(--rule); background: var(--ink); flex-wrap: wrap; }
+  .logo-tile-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); line-height: 1.5; }
+  .logo-tile-chips { display: flex; gap: 0.25rem; flex-shrink: 0; }
+
+  .mini-chip { padding: 0.3rem 0.5rem; background: transparent; border: 1px solid var(--rule); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); text-decoration: none; cursor: pointer; transition: all 0.15s ease; }
+  .mini-chip:hover { background: var(--brand-primary); color: var(--black); border-color: var(--brand-primary); }
+  .mini-chip.hidden { display: none; }
+
+  /* Tile background classes */
+  .bg-black { background: #000000; }
+  .bg-red   { background: #ff0000; }
+  .bg-teal  { background: var(--brand-primary); }
+  .bg-white { background: #ffffff; }
+  .bg-full  { background: #ffffff; }
+
+  /* BRAND COLORS */
+  .palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .swatch { border-radius: 6px; overflow: hidden; border: 1px solid var(--rule); transition: transform 0.3s ease; cursor: pointer; }
+  .swatch:hover { transform: translateY(-3px); }
+  .swatch-color { aspect-ratio: 4/3; position: relative; }
+  .copy-hint { position: absolute; bottom: 12px; right: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 0.55rem; background: rgba(0,0,0,0.4); color: var(--white); border-radius: 2px; opacity: 0; transition: opacity 0.2s ease; }
+  .swatch:hover .copy-hint { opacity: 1; }
+  .swatch-light .copy-hint { background: rgba(0,0,0,0.7); }
+  .swatch-info { background: var(--ink); padding: 1rem 1.25rem; border-top: 1px solid var(--rule); }
+  .swatch-role { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-dim); margin-bottom: 0.25rem; }
+  .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 500; color: var(--white); }
+  .swatch-name { font-family: 'Archivo', sans-serif; font-size: 0.8rem; color: var(--gray); margin-top: 0.15rem; }
+  .swatch-pms { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--gray-dim); margin-top: 0.35rem; }
+
+  /* PRESS KIT */
+  .press-kit { display: grid; grid-template-columns: 0.9fr 1.1fr; background: var(--ink); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+  .press-kit-visual { position: relative; background: var(--brand-primary); padding: 3rem; display: flex; align-items: flex-end; min-height: 380px; overflow: hidden; }
+  .press-kit-visual::before { content: ''; position: absolute; top: -30%; right: -30%; width: 80%; height: 160%; background: var(--team-wedge); transform: rotate(22deg); opacity: 0.95; z-index: 1; }
+  .press-kit-ghost { position: absolute; top: 50%; left: 50%; width: 160%; transform: translate(-50%, -50%) rotate(-10deg); filter: brightness(0) invert(1); opacity: 0.15; z-index: 2; pointer-events: none; }
+  .press-kit-visual-inner { position: relative; z-index: 3; color: var(--team-on-primary); width: 100%; }
+  .press-kit-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.4rem 0.7rem; background: var(--team-on-primary); color: var(--brand-primary); border-radius: 2px; margin-bottom: 1.5rem; }
+  .press-kit-visual-title { font-family: 'Archivo', sans-serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; line-height: 0.95; letter-spacing: -0.03em; text-transform: uppercase; margin-bottom: 1.25rem; }
+  .press-kit-visual-meta { display: flex; gap: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--team-on-primary); opacity: 0.75; padding-top: 1rem; border-top: 1px solid currentColor; flex-wrap: wrap; }
+  .press-kit-info { padding: 3rem 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .press-kit-description { font-size: 0.95rem; line-height: 1.6; color: var(--gray); }
+  .press-kit-contents { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem 2rem; }
+  .press-kit-contents li { display: flex; align-items: baseline; gap: 0.75rem; font-family: 'Archivo', sans-serif; font-size: 0.9rem; color: var(--white); padding: 0.3rem 0; }
+  .press-kit-contents li span { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--team-primary); min-width: 20px; }
+  .press-kit-downloads { display: flex; gap: 0.6rem; flex-wrap: wrap; padding-top: 0.5rem; }
+  .press-kit-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.25rem; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
+  .press-kit-btn svg { width: 12px; height: 12px; }
+  .press-kit-btn.primary { background: var(--team-primary); color: var(--black); border: 1px solid var(--team-primary); font-weight: 500; }
+  .press-kit-btn.primary:hover { background: var(--white); border-color: var(--white); }
+  .press-kit-btn.secondary { background: transparent; color: var(--gray); border: 1px solid var(--rule); }
+  .press-kit-btn.secondary:hover { background: var(--ink-2); color: var(--white); border-color: var(--gray-dim); }
+  .press-kit-meta { display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); padding-top: 0.5rem; border-top: 1px solid var(--rule); }
+
+  /* FOOTER */
+  .footer { max-width: 1400px; margin: 2rem auto 0; padding: 2rem 3rem 2.5rem; border-top: 1px solid var(--rule); display: flex; flex-direction: column; align-items: center; gap: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); }
+  .footer a { color: var(--team-primary); text-decoration: none; }
+  .footer-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 1rem; }
+  .footer-logos { display: flex; align-items: center; gap: 0.85rem; text-decoration: none; }
+  .footer-logo { width: 52px; height: 52px; object-fit: contain; display: block; opacity: 0.2; transition: opacity 0.2s ease; }
+  .footer-logos:hover .footer-logo { opacity: 1; }
+  .footer-divider { width: 1px; height: 22px; background: var(--white); opacity: 0.2; transition: opacity 0.2s ease; }
+  .footer-logos:hover .footer-divider { opacity: 1; }
+
+  /* MOTION */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-inner { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: 0.1s; }
+  .content .section { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .content .section:nth-child(1) { animation-delay: 0.2s; }
+  .content .section:nth-child(2) { animation-delay: 0.35s; }
+  .content .section:nth-child(3) { animation-delay: 0.5s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1000px) {
+    .topbar, .content, .footer { padding-left: 2rem; padding-right: 2rem; }
+    .hero-inner { padding-left: 2rem; padding-right: 2rem; }
+    .press-kit { grid-template-columns: 1fr; }
+    .press-kit-visual { min-height: 260px; padding: 2rem; }
+    .press-kit-info { padding: 2rem; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .logo-showcase { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .topbar, .content, .footer { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .hero-inner { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .logo-showcase { grid-template-columns: repeat(2, 1fr); }
+    .press-kit-contents { grid-template-columns: 1fr; }
+    .press-kit-downloads { flex-direction: column; }
+    .section-header { grid-template-columns: auto 1fr; }
+    .section-count { display: none; }
+    .logo-filters { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="page">
+
+  <div class="topbar">
+
+    <!-- PLL league toggle -->
+        <div class="league-bar">
+      <a class="league-half pll-half active" id="btn-pll" href="http://localhost:8080/pll-teams.html" aria-label="PLL">
+        <span class="league-spell">Premier Lacrosse League</span>
+        <img class="league-mark mark-active" src="../assets/HEADER/PLL_Icon_FullColor.svg" alt="PLL" />
+        <img class="league-mark mark-inactive" src="../assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" />
+      </a>
+      <a class="league-half wll-half" id="btn-wll" href="http://localhost:8080/wll-teams.html" aria-label="WLL">
+        <img class="league-mark mark-active" src="../assets/HEADER/WLL_Icon_3C.svg" alt="WLL" />
+        <img class="league-mark mark-inactive" src="../assets/WLL/PNG/WLL_Icon_1Color_DarkBkg.png" alt="" />
+        <span class="league-spell">Women's Lacrosse League</span>
+      </a>
+    </div>
+
+    <!-- PLL teams (shown by default on PLL pages) -->
+    <nav class="topbar-teams" id="nav-pll">
+      <a class="topbar-team" href="boston-cannons.html">
+        <img src="../assets/HEADER/BostonCannons_Icon_FullColor.svg" alt="" />
+        <span>Boston</span>
+      </a>
+      <a class="topbar-team" href="california-redwoods.html">
+        <img src="../assets/HEADER/CaliforniaRedwoods_Icon_FullColor.svg" alt="" />
+        <span>California</span>
+      </a>
+      <a class="topbar-team" href="carolina-chaos.html">
+        <img src="../assets/HEADER/CarolinaChaos_Icon_FullColor.svg" alt="" />
+        <span>Carolina</span>
+      </a>
+      <a class="topbar-team" href="denver-outlaws.html">
+        <img src="../assets/HEADER/DenverOutlaws_Pri_color_full.svg" alt="" />
+        <span>Denver</span>
+      </a>
+      <a class="topbar-team active" href="maryland-whipsnakes.html">
+        <img src="../assets/HEADER/MarylandWhipsnakes_Icon_FullColor.svg" alt="" />
+        <span>Maryland</span>
+      </a>
+      <a class="topbar-team" href="new-york-atlas.html">
+        <img src="../assets/HEADER/NewYorkAtlas_Icon__FullColor.svg" alt="" />
+        <span>New York</span>
+      </a>
+      <a class="topbar-team" href="philadelphia-waterdogs.html">
+        <img src="../assets/HEADER/PhiladelphiaWaterdogs_Icon__FullColor.svg" alt="" />
+        <span>Philadelphia</span>
+      </a>
+      <a class="topbar-team" href="utah-archers.html">
+        <img src="../assets/HEADER/UtahArchers_Icon_FullColor.svg" alt="" />
+        <span>Utah</span>
+      </a>
+    </nav>
+
+    <!-- WLL teams (hidden by default on PLL pages) -->
+    <nav class="topbar-teams hidden" id="nav-wll">
+      <a class="topbar-team" href="boston-guard.html">
+        <img src="../assets/HEADER/wll_boston_icon_fc_202526.svg" alt="" />
+        <span>Boston</span>
+      </a>
+      <a class="topbar-team" href="california-palms.html">
+        <img src="../assets/HEADER/WLL_California_ICON_FULL.svg" alt="" />
+        <span>California</span>
+      </a>
+      <a class="topbar-team" href="maryland-charm.html">
+        <img src="../assets/HEADER/WLL_Maryland_SEC_FULL%20(1).svg" alt="" />
+        <span>Maryland</span>
+      </a>
+      <a class="topbar-team" href="new-york-charging.html">
+        <img src="../assets/HEADER/WLL_NewYork_ICON_FULL.svg" alt="" />
+        <span>New York</span>
+      </a>
+    </nav>
+
+    <!-- WLL league toggle -->
+  </div>
+
+  <section class="hero">
+<div class="hero-inner">
+      <div class="hero-text">
+        <h1 class="hero-title">Maryland<br/>Whipsnakes</h1>
+      </div>
+      <div class="hero-logo">
+        <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_FullColor.svg" alt="Maryland Whipsnakes Primary Logo" />
+      </div>
+    </div>
+  </section>
+
+  <div class="content">
+
+    <!-- 01 · LOGOS & MARKS -->
+    <section class="section">
+      <div class="section-header" data-target="logos-body" style="cursor:pointer;user-select:none;">
+        <div class="section-number">01 —</div>
+        <h2 class="section-title">Logos &amp; Marks</h2>
+        <button class="section-toggle" aria-label="Collapse section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+
+      <div class="section-body" id="logos-body">
+
+      <!-- FILTER BAR -->
+      <div class="logo-filters">
+
+        <div class="filter-group">
+          <span class="filter-label">Type</span>
+          <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+          <button class="filter-btn" data-filter="type" data-value="primary">Primary</button>
+          <button class="filter-btn" data-filter="type" data-value="secondary">Secondary</button>
+          <button class="filter-btn" data-filter="type" data-value="icon">Icon</button>
+          <button class="filter-btn" data-filter="type" data-value="indigenous">Indigenous</button>
+        </div>
+
+        <div class="filter-group">
+          <span class="filter-label">Color</span>
+          <button class="filter-btn active" data-filter="color" data-value="all">All</button>
+          <button class="filter-btn" data-filter="color" data-value="black">
+            <span class="swatch-dot" style="background:#333;border:1px solid #666;"></span>Black
+          </button>
+          <button class="filter-btn" data-filter="color" data-value="red">
+            <span class="swatch-dot" style="background:#ff0000;"></span>Red
+          </button>
+          <button class="filter-btn" data-filter="color" data-value="teal">
+            <span class="swatch-dot" style="background:#3ddbc2;"></span>Teal
+          </button>
+          <button class="filter-btn" data-filter="color" data-value="white">
+            <span class="swatch-dot" style="background:#ffffff;border:1px solid #555;"></span>White
+          </button>
+        </div>
+
+        <div class="filter-group">
+          <span class="filter-label">Format</span>
+          <button class="filter-btn active" data-filter="format" data-value="all">All</button>
+          <button class="filter-btn" data-filter="format" data-value="svg">SVG</button>
+          <button class="filter-btn" data-filter="format" data-value="png">PNG</button>
+        </div>
+
+      </div>
+
+      <!-- ─── PRIMARY LOGO ─────────────────────────────── -->
+      <div class="logo-group" data-type="primary">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Primary Logo</h3>
+          <a class="logo-download-all" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+
+          <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile-img bg-black">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_FullColor.svg" alt="Primary Full Color" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_FullColor.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Primary_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-red" data-invisible-on="white">
+            <div class="logo-tile-img bg-red">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary%20_1ColorDarkBKG.svg" alt="Primary 1-Color Dark" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary%20_1ColorDarkBKG.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Primary%20_1ColorDarkBKG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-teal" data-invisible-on="black">
+            <div class="logo-tile-img bg-teal">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_1ColorLightBKG.svg" alt="Primary 1-Color Light" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_1ColorLightBKG.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Primary_1ColorLightBKG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── SECONDARY LOGO ────────────────────────────── -->
+      <div class="logo-group" data-type="secondary" style="margin-top:2.5rem;">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Secondary Logo</h3>
+          <a class="logo-download-all" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+
+          <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile-img bg-black">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary_FullColor.svg" alt="Secondary Full Color" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary_FullColor.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Secondary_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-red" data-invisible-on="white">
+            <div class="logo-tile-img bg-red">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary%20_1ColorDarkBKG.svg" alt="Secondary 1-Color Dark" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary%20_1ColorDarkBKG.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Secondary%20_1ColorDarkBKG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-teal" data-invisible-on="black">
+            <div class="logo-tile-img bg-teal">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary_1ColorLightBKG.svg" alt="Secondary 1-Color Light" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary_1ColorLightBKG.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Secondary_1ColorLightBKG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── ICON ──────────────────────────────────────── -->
+      <div class="logo-group" data-type="icon" style="margin-top:2.5rem;">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Icon</h3>
+          <a class="logo-download-all" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+
+          <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile-img bg-black">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon_FullColor.svg" alt="Icon Full Color" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon_FullColor.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Icon_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-red" data-invisible-on="white">
+            <div class="logo-tile-img bg-red">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon%20_1ColorDarkBKG.svg" alt="Icon 1-Color Dark" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon%20_1ColorDarkBKG.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Icon%20_1ColorDarkBKG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-teal" data-invisible-on="black">
+            <div class="logo-tile-img bg-teal">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon_1ColorLightBKG.svg" alt="Icon 1-Color Light" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon_1ColorLightBKG.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Icon_1ColorLightBKG.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── INDIGENOUS LOGO ───────────────────────────── -->
+      <div class="logo-group" data-type="indigenous" style="margin-top:2.5rem;">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Indigenous Logo</h3>
+          <a class="logo-download-all" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+
+          <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile-img bg-black">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg" alt="Indigenous on Black" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Black BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Indigenous_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-red">
+            <div class="logo-tile-img bg-red">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg" alt="Indigenous on Red" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Red BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Indigenous_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="logo-tile" data-orig-bg="bg-teal">
+            <div class="logo-tile-img bg-teal">
+              <img src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg" alt="Indigenous on Teal" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Teal BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip chip-svg" href="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg" download>SVG</a>
+                <a class="mini-chip chip-png" href="../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Indigenous_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      </div><!-- /section-body -->
+
+    </section>
+
+    <!-- 02 · BRAND COLORS -->
+    <section class="section">
+      <div class="section-header" data-target="colors-body" style="cursor:pointer;user-select:none;">
+        <div class="section-number">02 —</div>
+        <h2 class="section-title">Brand Colors</h2>
+        <button class="section-toggle" aria-label="Collapse section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="section-body" id="colors-body">
+      <div class="palette">
+        <div class="swatch" data-hex="#3DDBC2">
+          <div class="swatch-color" style="background:#3DDBC2;"><span class="copy-hint">Copy hex</span></div>
+          <div class="swatch-info"><div class="swatch-role">Primary</div><div class="swatch-hex">#3DDBC2</div><div class="swatch-name">Turquoise</div><div class="swatch-pms">PMS 333</div><div class="swatch-pms">TM Turquoise</div></div>
+        </div>
+        <div class="swatch" data-hex="#FF0000">
+          <div class="swatch-color" style="background:#FF0000;"><span class="copy-hint">Copy hex</span></div>
+          <div class="swatch-info"><div class="swatch-role">Secondary</div><div class="swatch-hex">#FF0000</div><div class="swatch-name">University Red</div><div class="swatch-pms">PMS 185 C</div><div class="swatch-pms">TM University Red — 657</div></div>
+        </div>
+        <div class="swatch" data-hex="#000000">
+          <div class="swatch-color" style="background:#000000;"><span class="copy-hint">Copy hex</span></div>
+          <div class="swatch-info"><div class="swatch-role">Tertiary</div><div class="swatch-hex">#000000</div><div class="swatch-name">Black</div><div class="swatch-pms">Black</div><div class="swatch-pms">TM Black — 010</div></div>
+        </div>
+        <div class="swatch swatch-light" data-hex="#FFFFFF">
+          <div class="swatch-color" style="background:#FFFFFF;border:1px solid #1f1f1f;"><span class="copy-hint">Copy hex</span></div>
+          <div class="swatch-info"><div class="swatch-role">Neutral</div><div class="swatch-hex">#FFFFFF</div><div class="swatch-name">White</div><div class="swatch-pms">White</div></div>
+        </div>
+      </div>
+      </div><!-- /colors-body -->
+    </section>
+
+    <!-- 03 · PRESS KIT -->
+    <section class="section" style="display:none;">
+      <div class="section-header" data-target="press-body" style="cursor:pointer;user-select:none;">
+        <div class="section-number">03 —</div>
+        <h2 class="section-title">Press &amp; Media Kit</h2>
+        <button class="section-toggle" aria-label="Collapse section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="section-body" id="press-body">
+      <div class="press-kit">
+        <div class="press-kit-visual">
+          <img class="press-kit-ghost" src="../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_FullColor.svg" alt="" aria-hidden="true" />
+          <div class="press-kit-visual-inner">
+            <div class="press-kit-badge">Press Kit / Maryland Whipsnakes</div>
+            <div class="press-kit-visual-title">Everything<br/>you need.</div>
+            <div class="press-kit-visual-meta"><span>Last updated · Apr 2026</span><span>Ver. 2.1</span></div>
+          </div>
+        </div>
+        <div class="press-kit-info">
+          <div class="press-kit-description">A complete bundle for media partners, sponsors, and editorial use. Includes official bios, boilerplate, approved photography, player headshots, fact sheets, and historical records. All assets are cleared for external publication under PLL media usage terms.</div>
+          <ul class="press-kit-contents">
+            <li><span>01</span> Team boilerplate &amp; history</li>
+            <li><span>02</span> Player &amp; coach bios</li>
+            <li><span>03</span> Approved headshots (high-res)</li>
+            <li><span>04</span> Editorial photography library</li>
+            <li><span>05</span> Championship &amp; stat fact sheets</li>
+            <li><span>06</span> Logo variants (see section 01)</li>
+          </ul>
+          <div class="press-kit-downloads">
+            <a class="press-kit-btn primary" data-download="whipsnakes-press-kit-full.zip">
+              Download full kit
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+            </a>
+            <a class="press-kit-btn secondary" data-download="whipsnakes-bios.pdf">Bios only (PDF)</a>
+            <a class="press-kit-btn secondary" data-download="whipsnakes-photos.zip">Photos only (ZIP)</a>
+          </div>
+          <div class="press-kit-meta"><span>24.6 MB</span><span>·</span><span>ZIP archive</span><span>·</span><span>Cleared for editorial use</span></div>
+        </div>
+      </div>
+      </div><!-- /press-body -->
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <a href="../index.html" class="footer-logos">
+      <img class="footer-logo" src="../assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="PLL" />
+      <span class="footer-divider"></span>
+      <img class="footer-logo" src="../assets/WLL/PNG/WLL_Icon_1Color_DarkBkg.png" alt="WLL" />
+    </a>
+    <div class="footer-row">
+      <div>© Premier Lacrosse League 2026 — Maryland Whipsnakes</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // ── SECTION COLLAPSE — generic, works for all sections ───────────────
+  document.querySelectorAll('.section-header[data-target]').forEach(header => {
+    header.addEventListener('click', () => {
+      const body   = document.getElementById(header.dataset.target);
+      const toggle = header.querySelector('.section-toggle');
+      const collapsed = body.classList.toggle('collapsed');
+      toggle.classList.toggle('collapsed', collapsed);
+    });
+  });
+
+  // ── LEAGUE TOGGLE — swap PLL / WLL team nav ───────────────────────────
+  const btnPLL  = document.getElementById('btn-pll');
+  const btnWLL  = document.getElementById('btn-wll');
+  const navPLL  = document.getElementById('nav-pll');
+  const navWLL  = document.getElementById('nav-wll');
+
+  function showLeague(league) {
+    const isPLL = league === 'pll';
+    navPLL.classList.toggle('hidden', !isPLL);
+    navWLL.classList.toggle('hidden',  isPLL);
+    btnPLL.classList.toggle('active',  isPLL);
+    btnWLL.classList.toggle('active', !isPLL);
+  }
+
+  btnWLL.addEventListener('click', (e) => { e.preventDefault(); showLeague('wll'); });
+
+  // ── TYPE FILTER — single-select, show/hide logo groups ────────────────
+  document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('.logo-group').forEach(g => {
+        g.classList.toggle('hidden', val !== 'all' && g.dataset.type !== val);
+      });
+    });
+  });
+
+  // ── COLOR FILTER — change bg on all tiles; hide tiles where logo is invisible ──
+  document.querySelectorAll('.filter-btn[data-filter="color"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-filter="color"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('.logo-tile').forEach(tile => {
+        const invisibleOn = (tile.dataset.invisibleOn || '').split(',').map(s => s.trim()).filter(Boolean);
+        const shouldHide = val !== 'all' && invisibleOn.includes(val);
+        tile.classList.toggle('hidden', shouldHide);
+        if (!shouldHide) {
+          const box = tile.querySelector('.logo-tile-img');
+          if (box) {
+            box.classList.remove('bg-black', 'bg-red', 'bg-teal', 'bg-white', 'bg-full');
+            box.classList.add(val === 'all' ? tile.dataset.origBg : 'bg-' + val);
+          }
+        }
+      });
+    });
+  });
+
+  // ── FORMAT FILTER — show/hide SVG / PNG chips ─────────────────────────
+  document.querySelectorAll('.filter-btn[data-filter="format"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-filter="format"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('.mini-chip').forEach(chip => {
+        if (val === 'all') { chip.classList.remove('hidden'); return; }
+        chip.classList.toggle('hidden', !chip.classList.contains('chip-' + val));
+      });
+    });
+  });
+
+  // ── PRESS KIT DEMO ────────────────────────────────────────────────────
+  document.querySelectorAll('[data-download]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); alert('[ Demo ] This would download: ' + el.dataset.download); });
+  });
+
+  // ── COLOR SWATCHES ────────────────────────────────────────────────────
+  document.querySelectorAll('.swatch[data-hex]').forEach(el => {
+    el.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(el.dataset.hex);
+        const hint = el.querySelector('.copy-hint');
+        if (hint) { const o = hint.textContent; hint.textContent = 'Copied ✓'; setTimeout(() => hint.textContent = o, 1200); }
+      } catch (e) {}
+    });
+  });
+</script>
+
+</body>
+</html>
