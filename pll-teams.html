@@ -39,6 +39,7 @@
   .league-half:not(.active) .mark-inactive { display: block; }
   .league-spell { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.50em; text-transform: uppercase; white-space: nowrap; font-weight: 500; color: var(--pll-yellow); opacity: 0.1; }
   .league-half.active .league-spell { opacity: 1; }
+  .league-half.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: var(--pll-yellow); }
 
   /* Team nav */
   .topbar-teams { display: flex; align-items: stretch; }
@@ -232,12 +233,12 @@
 <!-- TOP BAR -->
 <div class="topbar">
   <div class="league-bar">
-    <a class="league-half pll-half active" id="btn-pll" href="http://localhost:8080/pll-teams.html" aria-label="PLL">
+    <a class="league-half pll-half active" id="btn-pll" href="pll-teams.html" aria-label="PLL">
       <span class="league-spell">Premier Lacrosse League</span>
       <img class="league-mark mark-active" src="assets/header/PLL_Icon_FullColor.svg" alt="PLL" />
       <img class="league-mark mark-inactive" src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" />
     </a>
-    <a class="league-half wll-half" id="btn-wll" href="http://localhost:8080/wll-teams.html" aria-label="WLL">
+    <a class="league-half wll-half" id="btn-wll" href="wll-teams.html" aria-label="WLL">
       <img class="league-mark mark-active" src="assets/header/WLL_Icon_3C.svg" alt="WLL" />
       <img class="league-mark mark-inactive" src="assets/WLL/PNG/WLL_Icon_1Color_DarkBkg.png" alt="" />
       <span class="league-spell">Women's Lacrosse League</span>
@@ -1044,7 +1045,7 @@
   const navWll = document.getElementById('nav-wll');
   btnWll.addEventListener('click', e => {
     e.preventDefault();
-    window.location.href = 'http://localhost:8080/wll-teams.html';
+    window.location.href = 'wll-teams.html';
   });
 </script>
 

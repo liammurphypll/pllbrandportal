@@ -235,12 +235,12 @@
 
   <div class="topbar">
         <div class="league-bar">
-      <a class="league-half pll-half active" id="btn-pll" href="http://localhost:8080/pll-teams.html" aria-label="PLL">
+      <a class="league-half pll-half active" id="btn-pll" href="../pll-teams.html" aria-label="PLL">
         <span class="league-spell">Premier Lacrosse League</span>
         <img class="league-mark mark-active" src="../assets/header/PLL_Icon_FullColor.svg" alt="PLL" />
         <img class="league-mark mark-inactive" src="../assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" />
       </a>
-      <a class="league-half wll-half" id="btn-wll" href="http://localhost:8080/wll-teams.html" aria-label="WLL">
+      <a class="league-half wll-half" id="btn-wll" href="../wll-teams.html" aria-label="WLL">
         <img class="league-mark mark-active" src="../assets/header/WLL_Icon_3C.svg" alt="WLL" />
         <img class="league-mark mark-inactive" src="../assets/WLL/PNG/WLL_Icon_1Color_DarkBkg.png" alt="" />
         <span class="league-spell">Women's Lacrosse League</span>
@@ -665,7 +665,7 @@
     btnWLL.classList.toggle('active', !isPLL);
   }
 
-  btnWLL.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'http://localhost:8080/wll-teams.html'; });
+  btnWLL.addEventListener('click', (e) => { e.preventDefault(); window.location.href = '../wll-teams.html'; });
 
   // ── TYPE FILTER ──────────────────────────────────────────────────────
   document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(btn => {

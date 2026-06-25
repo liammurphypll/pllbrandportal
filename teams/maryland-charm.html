@@ -120,7 +120,7 @@
   .bg-yellow { background: #ffcb06; }
 
   /* BRAND COLORS */
-  .palette { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
   .swatch { border-radius: 6px; overflow: hidden; border: 1px solid var(--rule); transition: transform 0.3s ease; cursor: pointer; }
   .swatch:hover { transform: translateY(-3px); }
   .swatch-color { aspect-ratio: 4/3; position: relative; }
@@ -203,12 +203,12 @@
 
   <div class="topbar">
         <div class="league-bar">
-      <a class="league-half pll-half" id="btn-pll" href="http://localhost:8080/pll-teams.html" aria-label="PLL">
+      <a class="league-half pll-half" id="btn-pll" href="../pll-teams.html" aria-label="PLL">
         <span class="league-spell">Premier Lacrosse League</span>
         <img class="league-mark mark-active" src="../assets/header/PLL_Icon_FullColor.svg" alt="PLL" />
         <img class="league-mark mark-inactive" src="../assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" />
       </a>
-      <a class="league-half wll-half active" id="btn-wll" href="http://localhost:8080/wll-teams.html" aria-label="WLL">
+      <a class="league-half wll-half active" id="btn-wll" href="../wll-teams.html" aria-label="WLL">
         <img class="league-mark mark-active" src="../assets/header/WLL_Icon_3C.svg" alt="WLL" />
         <img class="league-mark mark-inactive" src="../assets/WLL/PNG/WLL_Icon_1Color_DarkBkg.png" alt="" />
         <span class="league-spell">Women's Lacrosse League</span>
@@ -498,6 +498,10 @@
             <div class="swatch-color" style="background:#ffcb06;"><span class="copy-hint">Copy hex</span></div>
             <div class="swatch-info"><div class="swatch-role">Accent</div><div class="swatch-hex">#FFCB06</div><div class="swatch-name">Yellow Strike</div><div class="swatch-pms">PMS 116C</div><div class="swatch-pms">TM Yellow Strike</div></div>
           </div>
+          <div class="swatch swatch-light" data-hex="#FFFFFF">
+            <div class="swatch-color" style="background:#FFFFFF;border:1px solid #1f1f1f;"><span class="copy-hint">Copy hex</span></div>
+            <div class="swatch-info"><div class="swatch-role">Accent</div><div class="swatch-hex">#FFFFFF</div><div class="swatch-name">White</div><div class="swatch-pms">White</div></div>
+          </div>
         </div>
       </div>
     </section>
@@ -575,7 +579,7 @@
   const btnPLL = document.getElementById('btn-pll');
   btnPLL.addEventListener('click', (e) => {
     e.preventDefault();
-    window.location.href = 'http://localhost:8080/pll-teams.html';
+    window.location.href = '../pll-teams.html';
   });
 
   // ── TYPE FILTER ──────────────────────────────────────────────────────
