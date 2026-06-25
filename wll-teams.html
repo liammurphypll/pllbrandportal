@@ -43,14 +43,14 @@
   /* Team nav */
   .topbar-teams { display: flex; align-items: stretch; }
   .topbar-teams.hidden { display: none; }
-  .topbar-team { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem 0.4rem; text-decoration: none; color: var(--gray-dim); transition: all 0.15s ease; white-space: nowrap; flex: 1; border-right: 1px solid var(--rule); position: relative; }
+  .topbar-team { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1.1rem 0.5rem; text-decoration: none; color: var(--gray-dim); transition: all 0.15s ease; white-space: nowrap; flex: 1; border-right: 1px solid var(--rule); position: relative; }
   .topbar-team:first-child { border-left: 1px solid var(--rule); }
   .topbar-team:hover { color: var(--white); background: rgba(255,255,255,0.04); }
   .topbar-team.active { color: var(--white); background: var(--ink); }
   .topbar-team.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--pll-yellow); }
-  .topbar-team img { width: 28px; height: 28px; object-fit: contain; display: block; opacity: 0.45; transition: opacity 0.15s ease; }
+  .topbar-team img { width: 32px; height: 32px; object-fit: contain; display: block; opacity: 0.45; transition: opacity 0.15s ease; }
   .topbar-team:hover img, .topbar-team.active img { opacity: 1; }
-  .topbar-team span { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .topbar-team span { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; }
   .topbar-team.active span { color: var(--white); }
 
   /* ===== HERO ===== */
@@ -92,6 +92,12 @@
   .mini-chip { padding: 0.3rem 0.5rem; background: transparent; border: 1px solid var(--rule); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); text-decoration: none; transition: all 0.15s ease; }
   .mini-chip:hover { background: var(--pll-yellow); color: var(--black); border-color: var(--pll-yellow); }
   .logo-tile.hidden  { display: none; }
+
+  #event-allstar .bg-red { background: #ff0000; }
+  #event-allstar .bg-navy { background: #001d2b; }
+  #event-allstar .filter-btn.active[data-value="red"][data-filter="color"] { background: #ff0000; color: var(--white); border-color: #ff0000; }
+  #event-allstar .filter-btn.active[data-value="navy"][data-filter="color"] { background: #001d2b; color: var(--white); border-color: #001d2b; }
+  #event-allstar .logo-tile-img { padding: 1.5rem; }
   .logo-group.hidden { display: none; }
   .bg-black  { background: #000000; }
   .bg-yellow { background: #fccb06; }
@@ -132,7 +138,7 @@
   /* ===== FOOTER ===== */
   .footer { max-width: 1400px; margin: 2rem auto 0; padding: 2rem 3rem 2.5rem; border-top: 1px solid var(--rule); display: flex; flex-direction: column; align-items: center; gap: 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); }
   .footer a { color: var(--pll-yellow); text-decoration: none; }
-  .footer-row { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 1rem; }
+  .footer-row { display: flex; justify-content: center; align-items: center; width: 100%; flex-wrap: wrap; gap: 1rem; }
   .footer-logos { display: flex; align-items: center; gap: 0.85rem; text-decoration: none; }
   .footer-logo { width: 52px; height: 52px; object-fit: contain; display: block; opacity: 0.2; transition: opacity 0.2s ease; }
   .footer-logos:hover .footer-logo { opacity: 1; }
@@ -181,20 +187,20 @@
     </a>
   </div>
   <nav class="topbar-teams hidden" id="nav-pll">
-    <a class="topbar-team" href="teams/boston-cannons.html"><img src="assets/header/BostonCannons_Icon_FullColor.svg" alt="Boston Cannons" /><span>Boston</span></a>
-    <a class="topbar-team" href="teams/california-redwoods.html"><img src="assets/header/CaliforniaRedwoods_Icon_FullColor.svg" alt="California Redwoods" /><span>California</span></a>
-    <a class="topbar-team" href="teams/carolina-chaos.html"><img src="assets/header/CarolinaChaos_Icon_FullColor.svg" alt="Carolina Chaos" /><span>Carolina</span></a>
-    <a class="topbar-team" href="teams/denver-outlaws.html"><img src="assets/header/DenverOutlaws_Pri_color_full.svg" alt="Denver Outlaws" /><span>Denver</span></a>
-    <a class="topbar-team" href="teams/maryland-whipsnakes.html"><img src="assets/header/MarylandWhipsnakes_Icon_FullColor.svg" alt="Maryland Whipsnakes" /><span>Maryland</span></a>
-    <a class="topbar-team" href="teams/new-york-atlas.html"><img src="assets/header/NewYorkAtlas_Icon__FullColor.svg" alt="New York Atlas" /><span>New York</span></a>
-    <a class="topbar-team" href="teams/philadelphia-waterdogs.html"><img src="assets/header/PhiladelphiaWaterdogs_Icon__FullColor.svg" alt="Philadelphia Waterdogs" /><span>Philadelphia</span></a>
-    <a class="topbar-team" href="teams/utah-archers.html"><img src="assets/header/UtahArchers_Icon_FullColor.svg" alt="Utah Archers" /><span>Utah</span></a>
+    <a class="topbar-team" href="teams/boston-cannons.html"><img src="assets/header/BostonCannons_Icon_FullColor.svg" alt="Boston Cannons" /><span>Boston<br/>Cannons</span></a>
+    <a class="topbar-team" href="teams/california-redwoods.html"><img src="assets/header/CaliforniaRedwoods_Icon_FullColor.svg" alt="California Redwoods" /><span>California<br/>Redwoods</span></a>
+    <a class="topbar-team" href="teams/carolina-chaos.html"><img src="assets/header/CarolinaChaos_Icon_FullColor.svg" alt="Carolina Chaos" /><span>Carolina<br/>Chaos</span></a>
+    <a class="topbar-team" href="teams/denver-outlaws.html"><img src="assets/header/DenverOutlaws_Pri_color_full.svg" alt="Denver Outlaws" /><span>Denver<br/>Outlaws</span></a>
+    <a class="topbar-team" href="teams/maryland-whipsnakes.html"><img src="assets/header/MarylandWhipsnakes_Icon_FullColor.svg" alt="Maryland Whipsnakes" /><span>Maryland<br/>Whipsnakes</span></a>
+    <a class="topbar-team" href="teams/new-york-atlas.html"><img src="assets/header/NewYorkAtlas_Icon__FullColor.svg" alt="New York Atlas" /><span>New York<br/>Atlas</span></a>
+    <a class="topbar-team" href="teams/philadelphia-waterdogs.html"><img src="assets/header/PhiladelphiaWaterdogs_Icon__FullColor.svg" alt="Philadelphia Waterdogs" /><span>Philadelphia<br/>Waterdogs</span></a>
+    <a class="topbar-team" href="teams/utah-archers.html"><img src="assets/header/UtahArchers_Icon_FullColor.svg" alt="Utah Archers" /><span>Utah<br/>Archers</span></a>
   </nav>
   <nav class="topbar-teams" id="nav-wll">
-    <a class="topbar-team" href="teams/boston-guard.html"><img src="assets/header/wll_boston_icon_fc_202526.svg" alt="Boston Guard" /><span>Boston</span></a>
-    <a class="topbar-team" href="teams/california-palms.html"><img src="assets/header/WLL_California_ICON_FULL.svg" alt="California Palms" /><span>California</span></a>
-    <a class="topbar-team" href="teams/maryland-charm.html"><img src="assets/header/WLL_Maryland_SEC_FULL (1).svg" alt="Maryland Charm" /><span>Maryland</span></a>
-    <a class="topbar-team" href="teams/new-york-charging.html"><img src="assets/header/WLL_NewYork_ICON_FULL.svg" alt="New York Charging" /><span>New York</span></a>
+    <a class="topbar-team" href="teams/boston-guard.html"><img src="assets/header/wll_boston_icon_fc_202526.svg" alt="Boston Guard" /><span>Boston<br/>Guard</span></a>
+    <a class="topbar-team" href="teams/california-palms.html"><img src="assets/header/WLL_California_ICON_FULL.svg" alt="California Palms" /><span>California<br/>Palms</span></a>
+    <a class="topbar-team" href="teams/maryland-charm.html"><img src="assets/header/WLL_Maryland_SEC_FULL (1).svg" alt="Maryland Charm" /><span>Maryland<br/>Charm</span></a>
+    <a class="topbar-team" href="teams/new-york-charging.html"><img src="assets/header/WLL_NewYork_ICON_FULL.svg" alt="New York Charging" /><span>New York<br/>Charging</span></a>
   </nav>
 </div>
 
@@ -489,9 +495,93 @@
   // ===== WLL EVENTS =====
   const wllEvents = [
     { id: 'allstar',      name: '2026 LEXUS ALL-STAR GAME' },
-    { id: 'playoffs',     name: 'Playoffs' },
-    { id: 'championship', name: 'WLL Championship' },
+    { id: 'playoffs',     name: 'Playoffs',        hidden: true },
+    { id: 'championship', name: 'WLL Championship', hidden: true },
   ];
+
+  function buildAllStarPanel() {
+    return `
+      <div class="logo-filters">
+        <div class="filter-group">
+          <span class="filter-label">Color</span>
+          <button class="filter-btn active" data-filter="color" data-value="all">All</button>
+          <button class="filter-btn" data-filter="color" data-value="navy"><span class="swatch-dot" style="background:#001d2b;border:1px solid #333;"></span>Navy</button>
+          <button class="filter-btn" data-filter="color" data-value="red"><span class="swatch-dot" style="background:#ff0000;border:1px solid #333;"></span>Red</button>
+          <button class="filter-btn" data-filter="color" data-value="white"><span class="swatch-dot" style="background:#ffffff;border:1px solid #555;"></span>White</button>
+        </div>
+      </div>
+      <div class="logo-group" data-type="primary">
+        <div class="logo-group-header">
+          <h3 class="logo-group-name">Primary</h3>
+          <a class="logo-download-all" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>
+            Download all
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px;"><path d="M12 3v14m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          </a>
+        </div>
+        <div class="logo-showcase">
+          <div class="logo-tile" data-orig-bg="bg-navy" data-invisible-on="red,white">
+            <div class="logo-tile-img bg-navy">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" alt="PLL All Star Game Full Color on Navy" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile hidden" data-orig-bg="bg-red" data-only-on="red">
+            <div class="logo-tile-img bg-red">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" alt="PLL All Star Game Full Color on Red" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile hidden" data-orig-bg="bg-white" data-only-on="white">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" alt="PLL All Star Game Full Color on White" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">Full Color</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_FullColor.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_FullColor.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-red" data-invisible-on="white">
+            <div class="logo-tile-img bg-red">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Light.svg" alt="PLL All Star Game 1-Color Dark BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Dark BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Light.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_1Color_Light.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+          <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="red,navy">
+            <div class="logo-tile-img bg-white">
+              <img src="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Dark.svg" alt="PLL All Star Game 1-Color Light BKG" />
+            </div>
+            <div class="logo-tile-meta">
+              <span class="logo-tile-label">1-Color<br/>Light BKG</span>
+              <div class="logo-tile-chips">
+                <a class="mini-chip" href="assets/ALL-STAR GAME/svg/pll_26_ASG_PrimaryLogo_1Color_Dark.svg" download>SVG</a>
+                <a class="mini-chip" href="assets/ALL-STAR GAME/PNG/pll_26_ASG_PrimaryLogo_1Color_Dark.png" download>PNG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
 
   function buildEventPanel() {
     return `
@@ -549,7 +639,7 @@
   const eventsNav     = document.getElementById('eventsNav');
   const eventsContent = document.getElementById('eventsContent');
 
-  wllEvents.forEach((evt, i) => {
+  wllEvents.filter(evt => !evt.hidden).forEach((evt, i) => {
     const tab = document.createElement('button');
     tab.className = 'event-tab' + (i === 0 ? ' active' : '');
     tab.dataset.event = evt.id;
@@ -559,7 +649,7 @@
     const panel = document.createElement('div');
     panel.className = 'event-panel' + (i === 0 ? ' active' : '');
     panel.id = 'event-' + evt.id;
-    panel.innerHTML = buildEventPanel();
+    panel.innerHTML = evt.id === 'allstar' ? buildAllStarPanel() : buildEventPanel();
     eventsContent.appendChild(panel);
   });
 
@@ -586,13 +676,14 @@
       });
     } else if (filter === 'color') {
       panel.querySelectorAll('.logo-tile').forEach(tile => {
+        const onlyOn = tile.dataset.onlyOn;
         const invisibleOn = (tile.dataset.invisibleOn || '').split(',').map(s => s.trim()).filter(Boolean);
-        const shouldHide = value !== 'all' && invisibleOn.includes(value);
+        const shouldHide = onlyOn ? value !== onlyOn : (value !== 'all' && invisibleOn.includes(value));
         tile.classList.toggle('hidden', shouldHide);
         if (!shouldHide) {
           const box = tile.querySelector('.logo-tile-img');
           if (box) {
-            box.classList.remove('bg-yellow', 'bg-black', 'bg-white');
+            box.classList.remove('bg-yellow', 'bg-black', 'bg-white', 'bg-red', 'bg-navy');
             box.classList.add(value === 'all' ? tile.dataset.origBg : 'bg-' + value);
           }
         }
