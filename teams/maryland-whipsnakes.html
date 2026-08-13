@@ -697,6 +697,380 @@
 
   </div>
 
+  
+    <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
+    <section class="section">
+      <div class="section-header" data-target="contrast-body" style="cursor:pointer;user-select:none;">
+        <div class="section-number">04 —</div>
+        <h2 class="section-title">Contrast Preview</h2>
+        <button class="section-toggle" aria-label="Collapse section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+
+      <div class="section-body" id="contrast-body">
+        <div class="cw-widget" id="cwWidget">
+          <div class="cw-left">
+            <div class="cw-stage" id="cwStage">
+              <img class="cw-logo" id="cwLogo" alt="Logo contrast preview" />
+              <div class="cw-variant-tag" id="cwVariantTag"></div>
+            </div>
+          </div>
+          <div class="cw-right">
+            <div class="cw-variant-buttons" id="cwVariantButtons"></div>
+            <div class="cw-downloads">
+              <button class="cw-dl-btn" id="cwDownloadSvg">Download SVG</button>
+              <button class="cw-dl-btn" id="cwDownloadPng">Download PNG</button>
+            </div>
+            <div class="cw-divider"></div>
+            <div class="cw-hsb-row">
+              <label class="cw-hsb-letter">H</label>
+              <input type="range" class="cw-slider cw-slider-h" id="cwHueSlider" min="0" max="360" value="0" />
+              <span class="cw-hsb-value" id="cwHueValue">0°</span>
+            </div>
+            <div class="cw-hsb-row">
+              <label class="cw-hsb-letter">S</label>
+              <input type="range" class="cw-slider cw-slider-s" id="cwSatSlider" min="0" max="100" value="0" />
+              <span class="cw-hsb-value" id="cwSatValue">0%</span>
+            </div>
+            <div class="cw-hsb-row">
+              <label class="cw-hsb-letter">B</label>
+              <input type="range" class="cw-slider cw-slider-b" id="cwBriSlider" min="0" max="100" value="100" />
+              <span class="cw-hsb-value" id="cwBriValue">100%</span>
+            </div>
+            <div class="cw-hex-row">
+              <span class="cw-hex-prefix">#</span>
+              <input class="cw-hex-input" id="cwHexInput" maxlength="6" spellcheck="false" />
+            </div>
+            <div class="cw-swatch-row" id="cwSwatchRow"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      .cw-widget { display: flex; gap: 2.5rem; }
+      .cw-left { flex: 1 1 65%; display: flex; flex-direction: column; justify-content: center; }
+      .cw-right { flex: 1 1 35%; max-width: 340px; display: flex; flex-direction: column; }
+      .cw-stage { position: relative; width: 85%; aspect-ratio: 1 / 1; border-radius: 6px; border: 1px solid var(--rule); display: flex; align-items: center; justify-content: center; transition: background-color 0.15s ease; padding: 1.25rem; margin: 0 auto; overflow: hidden; box-sizing: border-box; }
+      .cw-logo { max-width: 85%; max-height: 80%; object-fit: contain; }
+      .cw-variant-tag { position: absolute; bottom: 0.6rem; right: 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.55); color: #fff; padding: 0.25rem 0.55rem; border-radius: 2px; }
+      .cw-variant-buttons { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+      .cw-vbtn { background: none; border: 1px solid var(--rule); color: var(--gray-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.4rem 0.65rem; border-radius: 2px; cursor: pointer; transition: all 0.15s ease; }
+      .cw-vbtn:hover { color: var(--white); border-color: var(--gray-dim); }
+      .cw-vbtn.active { color: var(--black); background: var(--team-primary); border-color: var(--team-primary); }
+      .cw-vbtn.auto-pick::after { content: ' \2713'; }
+      .cw-downloads { display: flex; gap: 0.5rem; margin-bottom: 1.4rem; }
+      .cw-dl-btn { flex: 1; background: none; border: 1px solid var(--rule); color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.65rem; border-radius: 2px; cursor: pointer; transition: all 0.15s ease; }
+      .cw-dl-btn:hover { background: var(--team-primary); color: var(--black); border-color: var(--team-primary); }
+      .cw-divider { border-top: 1px solid var(--rule); margin-bottom: 1.4rem; }
+      .cw-hsb-row { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.1rem; }
+      .cw-hsb-letter { width: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gray-dim); flex-shrink: 0; }
+      .cw-hsb-value { width: 46px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--white); flex-shrink: 0; }
+      .cw-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 2px; outline: none; cursor: pointer; }
+      .cw-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--cw-thumb, #6b6b6b); border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); cursor: pointer; }
+      .cw-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--cw-thumb, #6b6b6b); border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); cursor: pointer; }
+      .cw-slider-h { background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); }
+      .cw-hex-row { display: flex; align-items: center; gap: 0.5rem; margin: 0.4rem 0 1.4rem; background: var(--ink); border: 1px solid var(--rule); border-radius: 3px; padding: 0.7rem 0.8rem; }
+      .cw-hex-prefix { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gray-dim); }
+      .cw-hex-input { flex: 1; background: none; border: none; color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.04em; outline: none; }
+      .cw-swatch-row { display: flex; gap: 0.5rem; }
+      .cw-swatch { width: 36px; height: 36px; border-radius: 3px; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; }
+      .cw-swatch.active { border-color: var(--team-primary); }
+      @media (max-width: 768px) { .cw-widget { flex-direction: column; } .cw-right { max-width: none; } }
+    </style>
+
+    <script>
+    (function () {
+      const LOGO_VARIANTS = [
+      {
+            "id": "primary-full-color",
+            "category": "Primary",
+            "label": "Prim \u00b7 Full Color",
+            "origBg": "black",
+            "invisibleOn": [],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_FullColor.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Primary_FullColor.png"
+      },
+      {
+            "id": "primary-1-color-dark-bkg",
+            "category": "Primary",
+            "label": "Prim \u00b7 1-Color Dark BKG",
+            "origBg": "red",
+            "invisibleOn": [
+                  "white"
+            ],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary%20_1ColorDarkBKG.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Primary%20_1ColorDarkBKG.png"
+      },
+      {
+            "id": "primary-1-color-light-bkg",
+            "category": "Primary",
+            "label": "Prim \u00b7 1-Color Light BKG",
+            "origBg": "teal",
+            "invisibleOn": [
+                  "black"
+            ],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Primary_1ColorLightBKG.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Primary_1ColorLightBKG.png"
+      },
+      {
+            "id": "secondary-full-color",
+            "category": "Secondary",
+            "label": "Seco \u00b7 Full Color",
+            "origBg": "black",
+            "invisibleOn": [],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary_FullColor.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Secondary_FullColor.png"
+      },
+      {
+            "id": "secondary-1-color-dark-bkg",
+            "category": "Secondary",
+            "label": "Seco \u00b7 1-Color Dark BKG",
+            "origBg": "red",
+            "invisibleOn": [
+                  "white"
+            ],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary%20_1ColorDarkBKG.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Secondary%20_1ColorDarkBKG.png"
+      },
+      {
+            "id": "secondary-1-color-light-bkg",
+            "category": "Secondary",
+            "label": "Seco \u00b7 1-Color Light BKG",
+            "origBg": "teal",
+            "invisibleOn": [
+                  "black"
+            ],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Secondary_1ColorLightBKG.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Secondary_1ColorLightBKG.png"
+      },
+      {
+            "id": "icon-full-color",
+            "category": "Icon",
+            "label": "Icon \u00b7 Full Color",
+            "origBg": "black",
+            "invisibleOn": [],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon_FullColor.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Icon_FullColor.png"
+      },
+      {
+            "id": "icon-1-color-dark-bkg",
+            "category": "Icon",
+            "label": "Icon \u00b7 1-Color Dark BKG",
+            "origBg": "red",
+            "invisibleOn": [
+                  "white"
+            ],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon%20_1ColorDarkBKG.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Icon%20_1ColorDarkBKG.png"
+      },
+      {
+            "id": "icon-1-color-light-bkg",
+            "category": "Icon",
+            "label": "Icon \u00b7 1-Color Light BKG",
+            "origBg": "teal",
+            "invisibleOn": [
+                  "black"
+            ],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Icon_1ColorLightBKG.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Icon_1ColorLightBKG.png"
+      },
+      {
+            "id": "indigenous-black-bkg",
+            "category": "Indigenous",
+            "label": "Indi \u00b7 Black BKG",
+            "origBg": "black",
+            "invisibleOn": [],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Indigenous_FullColor.png"
+      },
+      {
+            "id": "indigenous-red-bkg",
+            "category": "Indigenous",
+            "label": "Indi \u00b7 Red BKG",
+            "origBg": "red",
+            "invisibleOn": [],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Indigenous_FullColor.png"
+      },
+      {
+            "id": "indigenous-teal-bkg",
+            "category": "Indigenous",
+            "label": "Indi \u00b7 Teal BKG",
+            "origBg": "teal",
+            "invisibleOn": [],
+            "svg": "../assets/WHIPSNAKES/SVG/MarylandWhipsnakes_Indigenous_FullColor.svg",
+            "png": "../assets/WHIPSNAKES/PNG/MarylandWhipsnakes_Indigenous_FullColor.png"
+      }
+];
+      const BUCKETS = [
+      {
+            "name": "black",
+            "hex": "#000000"
+      },
+      {
+            "name": "red",
+            "hex": "#FF0000"
+      },
+      {
+            "name": "white",
+            "hex": "#FFFFFF"
+      },
+      {
+            "name": "full",
+            "hex": "#FFFFFF"
+      }
+];
+      const BUCKET_HEX = Object.fromEntries(BUCKETS.map(b => [b.name, b.hex]));
+      const TEAM_SLUG = "maryland-whipsnakes";
+
+      const el = {
+        stage: document.getElementById('cwStage'), logo: document.getElementById('cwLogo'),
+        tag: document.getElementById('cwVariantTag'), variantButtons: document.getElementById('cwVariantButtons'),
+        dlSvg: document.getElementById('cwDownloadSvg'), dlPng: document.getElementById('cwDownloadPng'),
+        hueSlider: document.getElementById('cwHueSlider'), satSlider: document.getElementById('cwSatSlider'),
+        briSlider: document.getElementById('cwBriSlider'), hueValue: document.getElementById('cwHueValue'),
+        satValue: document.getElementById('cwSatValue'), briValue: document.getElementById('cwBriValue'),
+        hexInput: document.getElementById('cwHexInput'), swatchRow: document.getElementById('cwSwatchRow')
+      };
+
+      let hsb = { h: 0, s: 0, b: 100 };
+      let manualVariant = null;
+
+      function hsbToRgb(h, s, b) {
+        s /= 100; b /= 100;
+        const k = n => (n + h / 60) % 6;
+        const f = n => b - b * s * Math.max(0, Math.min(k(n), 4 - k(n), 1));
+        return { r: Math.round(f(5) * 255), g: Math.round(f(3) * 255), b: Math.round(f(1) * 255) };
+      }
+      function rgbToHex({ r, g, b }) { return [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase(); }
+      function hexToRgb(hex) {
+        hex = hex.replace('#', ''); if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        const num = parseInt(hex, 16); return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+      }
+      function rgbToHsb({ r, g, b }) {
+        r /= 255; g /= 255; b /= 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+        let h = 0;
+        if (d !== 0) {
+          if (max === r) h = 60 * (((g - b) / d) % 6);
+          else if (max === g) h = 60 * ((b - r) / d + 2);
+          else h = 60 * ((r - g) / d + 4);
+        }
+        if (h < 0) h += 360;
+        return { h, s: max === 0 ? 0 : (d / max) * 100, b: max * 100 };
+      }
+      function currentHex() { return '#' + rgbToHex(hsbToRgb(hsb.h, hsb.s, hsb.b)); }
+
+      function nearestBucket(hex) {
+        const rgb = hexToRgb(hex);
+        let best = BUCKETS[0], bestDist = Infinity;
+        BUCKETS.forEach(b => {
+          const brgb = hexToRgb(b.hex);
+          const dist = (rgb.r - brgb.r) ** 2 + (rgb.g - brgb.g) ** 2 + (rgb.b - brgb.b) ** 2;
+          if (dist < bestDist) { bestDist = dist; best = b; }
+        });
+        return best.name;
+      }
+
+      // Picks the variant whose curated "designed-for" background (origBg)
+      // is closest to the current test color, after veto-ing anything
+      // flagged invisible on the nearest bucket.
+      function bestVariant(bgHex) {
+        const bucket = nearestBucket(bgHex);
+        let candidates = LOGO_VARIANTS.filter(v => !v.invisibleOn.includes(bucket));
+        if (candidates.length === 0) candidates = LOGO_VARIANTS;
+        const rgb = hexToRgb(bgHex);
+        let best = candidates[0], bestDist = Infinity;
+        candidates.forEach(v => {
+          const refHex = BUCKET_HEX[v.origBg] || BUCKET_HEX['navy'] || '#000000';
+          const refRgb = hexToRgb(refHex);
+          const dist = (rgb.r - refRgb.r) ** 2 + (rgb.g - refRgb.g) ** 2 + (rgb.b - refRgb.b) ** 2;
+          if (dist < bestDist) { bestDist = dist; best = v; }
+        });
+        return best;
+      }
+
+      function renderVariantButtons() {
+        el.variantButtons.innerHTML = LOGO_VARIANTS.map(v =>
+          `<button class="cw-vbtn" data-variant="${v.id}">${v.label}</button>`
+        ).join('');
+        [...el.variantButtons.children].forEach(btn => {
+          btn.addEventListener('click', () => {
+            manualVariant = manualVariant === btn.dataset.variant ? null : btn.dataset.variant;
+            update();
+          });
+        });
+      }
+
+      function renderSwatches() {
+        el.swatchRow.innerHTML = BUCKETS.map(b =>
+          `<div class="cw-swatch" data-hex="${b.hex}" style="background:${b.hex};${b.name === 'white' ? 'border:1px solid var(--rule);' : ''}" title="${b.name}"></div>`
+        ).join('');
+        [...el.swatchRow.children].forEach(sw => {
+          sw.addEventListener('click', () => setFromHex(sw.dataset.hex));
+        });
+      }
+
+      function setFromHex(hex) { hsb = rgbToHsb(hexToRgb(hex)); manualVariant = null; update(); }
+
+      function updateSliderPositions() {
+        el.hueSlider.value = hsb.h; el.satSlider.value = hsb.s; el.briSlider.value = hsb.b;
+        el.hueValue.textContent = Math.round(hsb.h) + '°';
+        el.satValue.textContent = Math.round(hsb.s) + '%';
+        el.briValue.textContent = Math.round(hsb.b) + '%';
+        const fullSat = '#' + rgbToHex(hsbToRgb(hsb.h, 100, hsb.b));
+        const noSat = '#' + rgbToHex(hsbToRgb(hsb.h, 0, hsb.b));
+        el.satSlider.style.background = `linear-gradient(to right, ${noSat}, ${fullSat})`;
+        const fullBri = '#' + rgbToHex(hsbToRgb(hsb.h, hsb.s, 100));
+        el.briSlider.style.background = `linear-gradient(to right, #000000, ${fullBri})`;
+        const thumbHex = currentHex();
+        [el.hueSlider, el.satSlider, el.briSlider].forEach(s => s.style.setProperty('--cw-thumb', thumbHex));
+      }
+
+      function update() {
+        const bgHex = currentHex();
+        el.stage.style.backgroundColor = bgHex;
+        el.hexInput.value = bgHex.replace('#', '');
+        updateSliderPositions();
+        const autoPick = bestVariant(bgHex);
+        const active = LOGO_VARIANTS.find(v => v.id === manualVariant) || autoPick;
+        el.logo.src = active.svg;
+        el.tag.textContent = `${active.category} · ${active.label.includes('·') ? active.label.split('· ')[1] : active.label}`;
+        [...el.variantButtons.children].forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.variant === active.id);
+          btn.classList.toggle('auto-pick', btn.dataset.variant === autoPick.id);
+        });
+        [...el.swatchRow.children].forEach(sw => {
+          sw.classList.toggle('active', sw.dataset.hex.toLowerCase() === bgHex.toLowerCase());
+        });
+        el.dlSvg.onclick = () => downloadAsset(active.svg, active.id, 'svg');
+        el.dlPng.onclick = () => downloadAsset(active.png, active.id, 'png');
+      }
+
+      function downloadAsset(url, id, ext) {
+        const a = document.createElement('a');
+        a.href = url; a.download = `${TEAM_SLUG}-${id}.${ext}`;
+        document.body.appendChild(a); a.click(); a.remove();
+      }
+
+      el.hueSlider.addEventListener('input', () => { hsb.h = Number(el.hueSlider.value); manualVariant = null; update(); });
+      el.satSlider.addEventListener('input', () => { hsb.s = Number(el.satSlider.value); manualVariant = null; update(); });
+      el.briSlider.addEventListener('input', () => { hsb.b = Number(el.briSlider.value); manualVariant = null; update(); });
+      el.hexInput.addEventListener('input', () => {
+        const val = el.hexInput.value.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
+        el.hexInput.value = val;
+        if (val.length === 6) setFromHex('#' + val);
+      });
+
+      renderVariantButtons();
+      renderSwatches();
+      setFromHex("#000000");
+    })();
+    </script>
+    <!-- ═══ /AUTO-INJECTED ═══ -->
+
   <footer class="footer">
     <a href="../index.html" class="footer-logos">
       <img class="footer-logo" src="../assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="PLL" />
