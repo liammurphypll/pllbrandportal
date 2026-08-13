@@ -594,6 +594,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -665,11 +668,11 @@
       .cw-style-btn.active { color: var(--black); background: var(--white); border-color: var(--white); }
       .cw-logo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-bottom: 1rem; max-height: 300px; overflow-y: auto; padding-right: 2px; }
       .cw-logo-grid::-webkit-scrollbar { width: 4px; } .cw-logo-grid::-webkit-scrollbar-track { background: transparent; } .cw-logo-grid::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 2px; }
-      .cw-tile { position: relative; border: 2px solid var(--rule); border-radius: 4px; cursor: pointer; overflow: hidden; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; padding: 0.6rem; transition: border-color 0.15s ease, transform 0.15s ease; }
+      .cw-tile { position: relative; border: 2px solid var(--rule); border-radius: 4px; cursor: pointer; overflow: hidden; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; padding: 1rem; transition: border-color 0.15s ease, transform 0.15s ease; }
       .cw-tile:hover { border-color: var(--gray-dim); transform: translateY(-2px); }
       .cw-tile.active { border-color: #ffcb06; }
       .cw-tile.full-color { outline: 1px dashed var(--rule); outline-offset: -3px; }
-      .cw-tile img { max-width: 90%; max-height: 80%; object-fit: contain; display: block; }
+      .cw-tile img { width: 100%; height: 100%; object-fit: contain; display: block; }
       .cw-tile-label { position: absolute; bottom: 0; left: 0; right: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.42rem; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; padding: 0.2rem 0.3rem; background: rgba(0,0,0,0.65); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .cw-downloads { display: flex; gap: 0.5rem; margin-bottom: 1.4rem; }
       .cw-dl-btn { flex: 1; background: none; border: 1px solid var(--rule); color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.65rem; border-radius: 2px; cursor: pointer; transition: all 0.15s ease; }
