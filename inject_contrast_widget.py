@@ -166,7 +166,7 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
             </div>
           </div>
           <div class="cw-right">
-            <div class="cw-variant-buttons" id="cwVariantButtons"></div>
+            <div class="cw-logo-grid" id="cwLogoGrid"></div>
             <div class="cw-downloads">
               <button class="cw-dl-btn" id="cwDownloadSvg">Download SVG</button>
               <button class="cw-dl-btn" id="cwDownloadPng">Download PNG</button>
@@ -207,12 +207,14 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
       .cw-stage {{ position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 360px; border-radius: 6px; border: 1px solid var(--rule); display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease; padding: 2rem; overflow: hidden; box-sizing: border-box; }}
       .cw-logo {{ max-width: 60%; max-height: 70%; object-fit: contain; }}
       .cw-variant-tag {{ position: absolute; bottom: 0.6rem; right: 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.55); color: #fff; padding: 0.25rem 0.55rem; border-radius: 2px; }}
-      .cw-variant-buttons {{ display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.9rem; }}
-      .cw-vbtn {{ background: none; border: 1px solid var(--rule); color: var(--gray-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.4rem 0.65rem; border-radius: 2px; cursor: pointer; transition: all 0.15s ease; }}
-      .cw-vbtn:hover {{ color: var(--white); border-color: var(--gray-dim); }}
-      .cw-vbtn.active {{ color: var(--black); background: #ffcb06; border-color: #ffcb06; }}
-      .cw-vbtn.full-color-btn {{ opacity: 0.5; }}
-      .cw-vbtn.full-color-btn.active {{ background: var(--team-primary); border-color: var(--team-primary); color: var(--white); opacity: 1; }}
+      .cw-logo-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-bottom: 1rem; max-height: 300px; overflow-y: auto; padding-right: 2px; }}
+      .cw-logo-grid::-webkit-scrollbar {{ width: 4px; }} .cw-logo-grid::-webkit-scrollbar-track {{ background: transparent; }} .cw-logo-grid::-webkit-scrollbar-thumb {{ background: var(--rule); border-radius: 2px; }}
+      .cw-tile {{ position: relative; border: 2px solid transparent; border-radius: 4px; cursor: pointer; overflow: hidden; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; padding: 0.6rem; transition: border-color 0.15s ease, transform 0.15s ease; }}
+      .cw-tile:hover {{ border-color: var(--gray-dim); transform: translateY(-2px); }}
+      .cw-tile.active {{ border-color: #ffcb06; }}
+      .cw-tile.full-color {{ outline: 1px dashed var(--rule); outline-offset: -3px; }}
+      .cw-tile img {{ max-width: 90%; max-height: 80%; object-fit: contain; display: block; }}
+      .cw-tile-label {{ position: absolute; bottom: 0; left: 0; right: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.42rem; letter-spacing: 0.08em; text-transform: uppercase; text-align: center; padding: 0.2rem 0.3rem; background: rgba(0,0,0,0.65); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
       .cw-downloads {{ display: flex; gap: 0.5rem; margin-bottom: 1.4rem; }}
       .cw-dl-btn {{ flex: 1; background: none; border: 1px solid var(--rule); color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.65rem; border-radius: 2px; cursor: pointer; transition: all 0.15s ease; }}
       .cw-dl-btn:hover {{ background: var(--team-primary); color: var(--black); border-color: var(--team-primary); }}
@@ -245,7 +247,7 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
 
       const el = {{
         stage: document.getElementById('cwStage'), logo: document.getElementById('cwLogo'),
-        tag: document.getElementById('cwVariantTag'), variantButtons: document.getElementById('cwVariantButtons'),
+        tag: document.getElementById('cwVariantTag'), logoGrid: document.getElementById('cwLogoGrid'),
         dlSvg: document.getElementById('cwDownloadSvg'), dlPng: document.getElementById('cwDownloadPng'),
         hueSlider: document.getElementById('cwHueSlider'), satSlider: document.getElementById('cwSatSlider'),
         briSlider: document.getElementById('cwBriSlider'), hueValue: document.getElementById('cwHueValue'),
@@ -312,13 +314,18 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
         return best;
       }}
 
-      function renderVariantButtons() {{
-        el.variantButtons.innerHTML = LOGO_VARIANTS.map(v =>
-          `<button class="cw-vbtn${{v.isFullColor ? ' full-color-btn' : ''}}" data-variant="${{v.id}}">${{v.label}}</button>`
-        ).join('');
-        [...el.variantButtons.children].forEach(btn => {{
-          btn.addEventListener('click', () => {{
-            manualVariant = manualVariant === btn.dataset.variant ? null : btn.dataset.variant;
+      function renderLogoGrid() {{
+        el.logoGrid.innerHTML = LOGO_VARIANTS.map(v => {{
+          const bgHex = BUCKET_HEX[v.origBg] || '#000000';
+          const shortLabel = v.label.includes('·') ? v.label.split('· ')[1] : v.label;
+          return `<div class="cw-tile${{v.isFullColor ? ' full-color' : ''}}" data-variant="${{v.id}}" style="background:${{bgHex}};" title="${{v.label}}">
+            <img src="${{v.svg}}" alt="${{shortLabel}}" loading="lazy" />
+            <span class="cw-tile-label">${{shortLabel}}</span>
+          </div>`;
+        }}).join('');
+        [...el.logoGrid.children].forEach(tile => {{
+          tile.addEventListener('click', () => {{
+            manualVariant = manualVariant === tile.dataset.variant ? null : tile.dataset.variant;
             update();
           }});
         }});
@@ -367,9 +374,8 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
 
         el.logo.src = active.svg;
         el.tag.textContent = `${{active.category}} · ${{active.label.includes('·') ? active.label.split('· ')[1] : active.label}}`;
-        [...el.variantButtons.children].forEach(btn => {{
-          btn.classList.toggle('active', btn.dataset.variant === active.id);
-          btn.classList.toggle('auto-pick', !isFullColor && btn.dataset.variant === autoPick.id);
+        [...el.logoGrid.children].forEach(tile => {{
+          tile.classList.toggle('active', tile.dataset.variant === active.id);
         }});
         [...el.swatchRow.children].forEach(sw => {{
           sw.classList.toggle('active', sw.dataset.hex.toLowerCase() === pickerHex.toLowerCase());
@@ -393,7 +399,7 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
         if (val.length === 6) setFromHex('#' + val);
       }});
 
-      renderVariantButtons();
+      renderLogoGrid();
       renderSwatches();
       setFromHex({json.dumps(bucket_colors.get('navy', '#000000'))});
     }})();
@@ -405,8 +411,16 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
 def process_file(path: Path, args):
     html_text = path.read_text(encoding='utf-8')
 
-    if WIDGET_MARKER in html_text and not args.force:
-        return 'skipped', 'already has widget (use --force to re-inject)'
+    if WIDGET_MARKER in html_text:
+        if not args.force:
+            return 'skipped', 'already has widget (use --force to re-inject)'
+        # Strip the old widget entirely before re-injecting
+        html_text = re.sub(
+            r'<!--\s*═+\s*AUTO-INJECTED.*?/AUTO-INJECTED[^\n]*-->',
+            '',
+            html_text,
+            flags=re.DOTALL,
+        ).strip()
 
     if '<footer class="footer">' not in html_text:
         return 'skipped', 'no <footer class="footer"> found to insert before'
@@ -433,6 +447,7 @@ def process_file(path: Path, args):
         return 'would-inject', f'{len(logo_variants)} variants, {len(bucket_colors)} buckets, team="{team_name}"'
 
     if args.output_dir:
+
         out_path = Path(args.output_dir) / path.name
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(new_html, encoding='utf-8')
