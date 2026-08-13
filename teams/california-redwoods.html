@@ -702,6 +702,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -761,7 +764,7 @@
       .cw-left { flex: 0 0 58%; }
       .cw-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
       .cw-stage { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 360px; border-radius: 6px; border: 1px solid var(--rule); display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease; padding: 2rem; overflow: hidden; box-sizing: border-box; }
-      .cw-logo { max-width: 60%; max-height: 70%; object-fit: contain; }
+      .cw-logo { width: 50%; height: 45%; object-fit: contain; display: block; flex-shrink: 0; }
       .cw-variant-tag { position: absolute; bottom: 0.6rem; right: 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.55); color: #fff; padding: 0.25rem 0.55rem; border-radius: 2px; }
       .cw-logo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-bottom: 1rem; max-height: 300px; overflow-y: auto; padding-right: 2px; }
       .cw-logo-grid::-webkit-scrollbar { width: 4px; } .cw-logo-grid::-webkit-scrollbar-track { background: transparent; } .cw-logo-grid::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 2px; }
@@ -1005,26 +1008,34 @@
       }
       function currentHex() { return '#' + rgbToHex(hsbToRgb(hsb.h, hsb.s, hsb.b)); }
 
-      // Luminance of a hex color (0 = black, 1 = white)
+      // Perceived luminance of a hex color (0=black, 1=white)
       function luminance(hex) {
         const { r, g, b } = hexToRgb(hex);
         return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
       }
 
-      // True if a bucket name resolves to a dark color
-      const DARK_BUCKETS = new Set(
-        BUCKETS.filter(b => luminance(b.hex) < 0.4).map(b => b.name)
-      );
+      // Determine whether a variant is intended for dark vs light backgrounds
+      // using its label text — far more reliable than origBg luminance since
+      // some teams use unexpected colors (e.g. Redwoods yellow as a "dark" bg).
+      function isForDarkBg(v) {
+        const lbl = (v.label || '').toLowerCase();
+        if (lbl.includes('light')) return false;
+        if (lbl.includes('dark'))  return true;
+        if (lbl.includes('white')) return false;
+        // Named-bg indigenous variants (e.g. "Black BKG", "Orange BKG"):
+        // fall back to origBg luminance
+        const hex = BUCKET_HEX[v.origBg];
+        return hex ? luminance(hex) < 0.5 : true;
+      }
 
-      // Picks the right 1-color variant purely from background luminance:
-      // dark bg → dark-bkg variant; light bg → light-bkg variant.
-      // Always constrained to activeCategory so the logo group never changes.
+      // Picks the right 1-color variant from background luminance,
+      // always constrained to activeCategory so the logo group never changes.
       function bestVariant(bgHex, category) {
-        const bgDark = luminance(bgHex) < 0.4;
+        const bgDark = luminance(bgHex) < 0.5;
         let pool = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category));
         if (pool.length === 0) pool = LOGO_VARIANTS.filter(v => !v.isFullColor);
         if (pool.length === 0) pool = LOGO_VARIANTS;
-        const preferred = pool.filter(v => v.origBg && (bgDark ? DARK_BUCKETS.has(v.origBg) : !DARK_BUCKETS.has(v.origBg)));
+        const preferred = pool.filter(v => isForDarkBg(v) === bgDark);
         return (preferred.length > 0 ? preferred : pool)[0];
       }
 
@@ -1118,8 +1129,9 @@
       renderLogoGrid();
       renderSwatches();
       hsb = rgbToHsb(hexToRgb("#000000"));
-      const _init = bestVariant(currentHex(), null);
-      activeCategory = _init.category;
+      // Default to Primary category; fall back to whatever auto-picks first
+      const _primaryVariant = LOGO_VARIANTS.find(v => !v.isFullColor && v.category === 'Primary');
+      activeCategory = _primaryVariant ? 'Primary' : (bestVariant(currentHex(), null) || LOGO_VARIANTS[0]).category;
       update();
     })();
     </script>
