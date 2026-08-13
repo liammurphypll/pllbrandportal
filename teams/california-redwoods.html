@@ -717,6 +717,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -737,6 +740,10 @@
             </div>
           </div>
           <div class="cw-right">
+            <div class="cw-style-tabs" id="cwStyleTabs">
+              <button class="cw-style-btn active" data-style="1-color">1-Color</button>
+              <button class="cw-style-btn" data-style="full-color">Full Color</button>
+            </div>
             <div class="cw-logo-grid" id="cwLogoGrid"></div>
             <div class="cw-downloads">
               <button class="cw-dl-btn" id="cwDownloadSvg">Download SVG</button>
@@ -778,6 +785,10 @@
       .cw-stage { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 6px; border: 1px solid var(--rule); display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease; padding: 2rem; overflow: hidden; box-sizing: border-box; }
       .cw-logo { width: 50%; height: 45%; object-fit: contain; display: block; flex-shrink: 0; }
       .cw-variant-tag { position: absolute; bottom: 0.6rem; right: 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.55); color: #fff; padding: 0.25rem 0.55rem; border-radius: 2px; }
+      .cw-style-tabs { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+      .cw-style-btn { flex: 1; padding: 0.4rem 0.6rem; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); background: none; border: 1px solid var(--rule); border-radius: 2px; cursor: pointer; transition: all 0.15s ease; }
+      .cw-style-btn:hover { color: var(--white); border-color: var(--gray-dim); }
+      .cw-style-btn.active { color: var(--black); background: var(--white); border-color: var(--white); }
       .cw-logo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-bottom: 1rem; max-height: 300px; overflow-y: auto; padding-right: 2px; }
       .cw-logo-grid::-webkit-scrollbar { width: 4px; } .cw-logo-grid::-webkit-scrollbar-track { background: transparent; } .cw-logo-grid::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 2px; }
       .cw-tile { position: relative; border: 2px solid var(--rule); border-radius: 4px; cursor: pointer; overflow: hidden; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; padding: 0.6rem; transition: border-color 0.15s ease, transform 0.15s ease; }
@@ -992,8 +1003,9 @@
       };
 
       let hsb = { h: 0, s: 0, b: 100 };
-      let lockedVariant = null;   // set only for full-color tiles
+      let lockedVariant = null;   // non-null only when user manually picks a specific tile
       let activeCategory = null;  // constrains auto-pick to one logo group
+      let activeStyle = '1-color'; // '1-color' | 'full-color'
 
       function hsbToRgb(h, s, b) {
         s /= 100; b /= 100;
@@ -1057,6 +1069,18 @@
         return (preferred.length > 0 ? preferred : pool)[0];
       }
 
+      function bestFullColor(category) {
+        let pool = LOGO_VARIANTS.filter(v => v.isFullColor && (!category || v.category === category));
+        if (pool.length === 0) pool = LOGO_VARIANTS.filter(v => v.isFullColor);
+        return pool[0] || null;
+      }
+
+      function setStyleTab(style) {
+        activeStyle = style;
+        [...document.querySelectorAll('.cw-style-btn')].forEach(b =>
+          b.classList.toggle('active', b.dataset.style === style));
+      }
+
       function renderLogoGrid() {
         el.logoGrid.innerHTML = LOGO_VARIANTS.map(v => {
           const tileBg = BUCKET_HEX[v.origBg] || '#000000';
@@ -1071,6 +1095,7 @@
             const clicked = LOGO_VARIANTS.find(v => v.id === tile.dataset.variant);
             activeCategory = clicked.category;
             lockedVariant = clicked.isFullColor ? clicked.id : null;
+            setStyleTab(clicked.isFullColor ? 'full-color' : '1-color');
             update();
           });
         });
@@ -1085,7 +1110,7 @@
         });
       }
 
-      function setFromHex(hex) { hsb = rgbToHsb(hexToRgb(hex)); lockedVariant = null; update(); }
+      function setFromHex(hex) { hsb = rgbToHsb(hexToRgb(hex)); if (activeStyle !== 'full-color') lockedVariant = null; update(); }
 
       function updateSliderPositions() {
         el.hueSlider.value = hsb.h; el.satSlider.value = hsb.s; el.briSlider.value = hsb.b;
@@ -1103,11 +1128,24 @@
 
       function update() {
         const pickerHex = currentHex();
-        const autoPick = bestVariant(pickerHex, activeCategory);
-        const active = (lockedVariant ? LOGO_VARIANTS.find(v => v.id === lockedVariant) : null) || autoPick;
+        let active;
+        if (activeStyle === 'full-color') {
+          // In full-color mode: honour a manually-locked FC tile, otherwise auto-pick
+          const fcLocked = lockedVariant
+            ? LOGO_VARIANTS.find(v => v.id === lockedVariant && v.isFullColor)
+            : null;
+          active = fcLocked || bestFullColor(activeCategory) || LOGO_VARIANTS.find(v => v.isFullColor) || LOGO_VARIANTS[0];
+          lockedVariant = active.id; // keep locked so sliders don't clear it
+        } else {
+          // In 1-color mode: respect a manually-locked 1-color tile, otherwise auto-pick
+          const oneLocked = lockedVariant
+            ? LOGO_VARIANTS.find(v => v.id === lockedVariant && !v.isFullColor)
+            : null;
+          active = oneLocked || bestVariant(pickerHex, activeCategory);
+        }
         const isFullColor = active.isFullColor;
 
-        // Full-color logos always show on their own designed-for background
+        // Full-color logos show on their own designed-for background
         const displayBg = isFullColor
           ? (BUCKET_HEX[active.origBg] || '#000000')
           : pickerHex;
@@ -1135,13 +1173,21 @@
         document.body.appendChild(a); a.click(); a.remove();
       }
 
-      el.hueSlider.addEventListener('input', () => { hsb.h = Number(el.hueSlider.value); lockedVariant = null; update(); });
-      el.satSlider.addEventListener('input', () => { hsb.s = Number(el.satSlider.value); lockedVariant = null; update(); });
-      el.briSlider.addEventListener('input', () => { hsb.b = Number(el.briSlider.value); lockedVariant = null; update(); });
+      el.hueSlider.addEventListener('input', () => { hsb.h = Number(el.hueSlider.value); if (activeStyle !== 'full-color') lockedVariant = null; update(); });
+      el.satSlider.addEventListener('input', () => { hsb.s = Number(el.satSlider.value); if (activeStyle !== 'full-color') lockedVariant = null; update(); });
+      el.briSlider.addEventListener('input', () => { hsb.b = Number(el.briSlider.value); if (activeStyle !== 'full-color') lockedVariant = null; update(); });
       el.hexInput.addEventListener('input', () => {
         const val = el.hexInput.value.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
         el.hexInput.value = val;
         if (val.length === 6) setFromHex('#' + val);
+      });
+
+      [...document.querySelectorAll('.cw-style-btn')].forEach(btn => {
+        btn.addEventListener('click', () => {
+          setStyleTab(btn.dataset.style);
+          lockedVariant = null;
+          update();
+        });
       });
 
       renderLogoGrid();
