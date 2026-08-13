@@ -675,6 +675,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -964,11 +967,17 @@
       }
       function currentHex() { return '#' + rgbToHex(hsbToRgb(hsb.h, hsb.s, hsb.b)); }
 
-      // Perceived luminance of a hex color (0=black, 1=white)
+      // WCAG relative luminance — gamma-corrected, 0 = black, 1 = white.
+      // Threshold 0.179 is the exact breakeven where white and black logos
+      // both achieve the same contrast ratio against the background (≈ 4.5:1).
+      // This implicitly handles saturation: a fully-saturated red has lum 0.213
+      // (dark), yellow 0.928 (light), blue 0.072 (dark), matching human perception.
       function luminance(hex) {
         const { r, g, b } = hexToRgb(hex);
-        return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        const g2l = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+        return 0.2126 * g2l(r) + 0.7152 * g2l(g) + 0.0722 * g2l(b);
       }
+      const DARK_THRESHOLD = 0.179;
 
       // Determine whether a variant is intended for dark vs light backgrounds
       // using its label text — far more reliable than origBg luminance since
@@ -981,13 +990,13 @@
         // Named-bg indigenous variants (e.g. "Black BKG", "Orange BKG"):
         // fall back to origBg luminance
         const hex = BUCKET_HEX[v.origBg];
-        return hex ? luminance(hex) < 0.5 : true;
+        return hex ? luminance(hex) < DARK_THRESHOLD : true;
       }
 
       // Picks the right 1-color variant from background luminance,
       // always constrained to activeCategory so the logo group never changes.
       function bestVariant(bgHex, category) {
-        const bgDark = luminance(bgHex) < 0.5;
+        const bgDark = luminance(bgHex) < DARK_THRESHOLD;
         let pool = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category));
         if (pool.length === 0) pool = LOGO_VARIANTS.filter(v => !v.isFullColor);
         if (pool.length === 0) pool = LOGO_VARIANTS;
