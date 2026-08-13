@@ -87,6 +87,7 @@
   .logo-tile:hover { border-color: var(--pll-yellow); transform: translateY(-3px); }
   .logo-tile-img { aspect-ratio: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 2rem; overflow: hidden; }
   .logo-tile-img img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
+  .logo-group[data-type="icon"] .logo-tile-img { padding: 3.5rem; }
   .logo-tile-meta { padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; border-top: 1px solid var(--rule); background: var(--ink); flex-wrap: wrap; }
   .logo-tile-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray); line-height: 1.5; }
   .logo-tile-chips { display: flex; gap: 0.25rem; flex-shrink: 0; }
@@ -437,9 +438,9 @@
   // ===== WLL TEAMS =====
   const wllTeams = [
     { slug: 'boston-guard',      name: 'Boston Guard',      logo: 'assets/GUARD/SVG/WLL_BostonGuard_Primary_FullColor.svg',        color: '#091f40' },
-    { slug: 'california-palms',  name: 'California Palms',  logo: 'assets/PALMS/SVG/WLL_CaliforniaPalms_Primary_FullColor.svg',    color: '#ea6cb4' },
-    { slug: 'maryland-charm',    name: 'Maryland Charm',    logo: 'assets/CHARM/SVG/WLL_MarylandCharm_Primary_FullColor.svg',      color: '#ff0000' },
-    { slug: 'new-york-charging', name: 'New York Charging', logo: 'assets/CHARGING/SVG/WLL_NewYorkCharging_Primary_FullColor.svg', color: '#00b1ff', pad: '4rem' },
+    { slug: 'california-palms',  name: 'California Palms',  logo: 'assets/PALMS/SVG/WLL_CaliforniaPalms_Primary_FullColor.svg',    color: '#ea6cb4', pad: '4.5rem' },
+    { slug: 'maryland-charm',    name: 'Maryland Charm',    logo: 'assets/CHARM/SVG/WLL_MarylandCharm_Primary_FullColor.svg',      color: '#ff0000', pad: '4.5rem' },
+    { slug: 'new-york-charging', name: 'New York Charging', logo: 'assets/CHARGING/SVG/WLL_NewYorkCharging_Primary_FullColor.svg', color: '#00b1ff', pad: '5rem' },
   ];
 
   const arrowSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H9M17 7V15"/></svg>';
