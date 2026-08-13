@@ -608,6 +608,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -946,6 +949,15 @@
         activeStyle = style;
         [...document.querySelectorAll('.cw-style-btn')].forEach(b =>
           b.classList.toggle('active', b.dataset.style === style));
+        filterGrid();
+      }
+
+      function filterGrid() {
+        [...el.logoGrid.children].forEach(tile => {
+          const v = LOGO_VARIANTS.find(v => v.id === tile.dataset.variant);
+          if (!v) return;
+          tile.style.display = (activeStyle === 'full-color' ? v.isFullColor : !v.isFullColor) ? '' : 'none';
+        });
       }
 
       function renderLogoGrid() {
@@ -1058,6 +1070,7 @@
       });
 
       renderLogoGrid();
+      filterGrid();
       renderSwatches();
       hsb = rgbToHsb(hexToRgb("#091F40"));
       // Default to Primary category; fall back to whatever auto-picks first

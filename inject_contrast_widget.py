@@ -382,6 +382,15 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
         activeStyle = style;
         [...document.querySelectorAll('.cw-style-btn')].forEach(b =>
           b.classList.toggle('active', b.dataset.style === style));
+        filterGrid();
+      }}
+
+      function filterGrid() {{
+        [...el.logoGrid.children].forEach(tile => {{
+          const v = LOGO_VARIANTS.find(v => v.id === tile.dataset.variant);
+          if (!v) return;
+          tile.style.display = (activeStyle === 'full-color' ? v.isFullColor : !v.isFullColor) ? '' : 'none';
+        }});
       }}
 
       function renderLogoGrid() {{
@@ -494,6 +503,7 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
       }});
 
       renderLogoGrid();
+      filterGrid();
       renderSwatches();
       hsb = rgbToHsb(hexToRgb({json.dumps(init_hex)}));
       // Default to Primary category; fall back to whatever auto-picks first
