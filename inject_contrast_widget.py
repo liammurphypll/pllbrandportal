@@ -257,7 +257,8 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
       }};
 
       let hsb = {{ h: 0, s: 0, b: 100 }};
-      let manualVariant = null;
+      let lockedVariant = null;   // set only for full-color tiles
+      let activeCategory = null;  // constrains auto-pick to one logo group
 
       function hsbToRgb(h, s, b) {{
         s /= 100; b /= 100;
@@ -295,12 +296,13 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
         return best.name;
       }}
 
-      // Auto-picks the best 1-color variant for the current background.
-      // Full-color variants are excluded from auto-pick — they only appear
-      // when the user manually clicks their button.
-      function bestVariant(bgHex) {{
+      // Auto-picks the best 1-color variant for the current background,
+      // constrained to activeCategory so adjusting the slider never jumps
+      // to a different logo group (e.g. Icon never switches to Indigenous).
+      function bestVariant(bgHex, category) {{
         const bucket = nearestBucket(bgHex);
-        let candidates = LOGO_VARIANTS.filter(v => !v.isFullColor && !v.invisibleOn.includes(bucket));
+        let candidates = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category) && !v.invisibleOn.includes(bucket));
+        if (candidates.length === 0) candidates = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category));
         if (candidates.length === 0) candidates = LOGO_VARIANTS.filter(v => !v.isFullColor);
         if (candidates.length === 0) candidates = LOGO_VARIANTS;
         const rgb = hexToRgb(bgHex);
@@ -325,7 +327,9 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
         }}).join('');
         [...el.logoGrid.children].forEach(tile => {{
           tile.addEventListener('click', () => {{
-            manualVariant = manualVariant === tile.dataset.variant ? null : tile.dataset.variant;
+            const clicked = LOGO_VARIANTS.find(v => v.id === tile.dataset.variant);
+            activeCategory = clicked.category;
+            lockedVariant = clicked.isFullColor ? clicked.id : null;
             update();
           }});
         }});
@@ -340,7 +344,7 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
         }});
       }}
 
-      function setFromHex(hex) {{ hsb = rgbToHsb(hexToRgb(hex)); manualVariant = null; update(); }}
+      function setFromHex(hex) {{ hsb = rgbToHsb(hexToRgb(hex)); lockedVariant = null; update(); }}
 
       function updateSliderPositions() {{
         el.hueSlider.value = hsb.h; el.satSlider.value = hsb.s; el.briSlider.value = hsb.b;
@@ -358,8 +362,8 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
 
       function update() {{
         const pickerHex = currentHex();
-        const autoPick = bestVariant(pickerHex);
-        const active = LOGO_VARIANTS.find(v => v.id === manualVariant) || autoPick;
+        const autoPick = bestVariant(pickerHex, activeCategory);
+        const active = (lockedVariant ? LOGO_VARIANTS.find(v => v.id === lockedVariant) : null) || autoPick;
         const isFullColor = active.isFullColor;
 
         // Full-color logos always show on their own designed-for background
@@ -390,9 +394,9 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
         document.body.appendChild(a); a.click(); a.remove();
       }}
 
-      el.hueSlider.addEventListener('input', () => {{ hsb.h = Number(el.hueSlider.value); manualVariant = null; update(); }});
-      el.satSlider.addEventListener('input', () => {{ hsb.s = Number(el.satSlider.value); manualVariant = null; update(); }});
-      el.briSlider.addEventListener('input', () => {{ hsb.b = Number(el.briSlider.value); manualVariant = null; update(); }});
+      el.hueSlider.addEventListener('input', () => {{ hsb.h = Number(el.hueSlider.value); lockedVariant = null; update(); }});
+      el.satSlider.addEventListener('input', () => {{ hsb.s = Number(el.satSlider.value); lockedVariant = null; update(); }});
+      el.briSlider.addEventListener('input', () => {{ hsb.b = Number(el.briSlider.value); lockedVariant = null; update(); }});
       el.hexInput.addEventListener('input', () => {{
         const val = el.hexInput.value.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
         el.hexInput.value = val;
