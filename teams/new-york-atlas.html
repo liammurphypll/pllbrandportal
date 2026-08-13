@@ -636,6 +636,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -913,6 +916,17 @@
         return 0.2126 * g2l(r) + 0.7152 * g2l(g) + 0.0722 * g2l(b);
       }
       const DARK_THRESHOLD = 0.179;
+      // A background is only "dark enough for white logo" if it is dark by
+      // BOTH WCAG luminance AND raw HSB brightness. This prevents saturated
+      // pinks, oranges, and reds (low green channel → low WCAG lum, but
+      // visually bright) from incorrectly triggering the white logo.
+      const BRIGHT_CUTOFF = 0.60;  // HSB brightness above this → always light
+
+      function isDarkBg(hex) {
+        const { r, g, b } = hexToRgb(hex);
+        const brightness = Math.max(r, g, b) / 255;
+        return luminance(hex) < DARK_THRESHOLD && brightness < BRIGHT_CUTOFF;
+      }
 
       // Determine whether a variant is intended for dark vs light backgrounds
       // using its label text — far more reliable than origBg luminance since
@@ -923,15 +937,15 @@
         if (lbl.includes('dark'))  return true;
         if (lbl.includes('white')) return false;
         // Named-bg indigenous variants (e.g. "Black BKG", "Orange BKG"):
-        // fall back to origBg luminance
+        // fall back to combined brightness + luminance check
         const hex = BUCKET_HEX[v.origBg];
-        return hex ? luminance(hex) < DARK_THRESHOLD : true;
+        return hex ? isDarkBg(hex) : true;
       }
 
       // Picks the right 1-color variant from background luminance,
       // always constrained to activeCategory so the logo group never changes.
       function bestVariant(bgHex, category) {
-        const bgDark = luminance(bgHex) < DARK_THRESHOLD;
+        const bgDark = isDarkBg(bgHex);
         let pool = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category));
         if (pool.length === 0) pool = LOGO_VARIANTS.filter(v => !v.isFullColor);
         if (pool.length === 0) pool = LOGO_VARIANTS;
