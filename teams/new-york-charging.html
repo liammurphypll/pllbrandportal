@@ -578,6 +578,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -641,7 +644,7 @@
       .cw-variant-tag { position: absolute; bottom: 0.6rem; right: 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.55); color: #fff; padding: 0.25rem 0.55rem; border-radius: 2px; }
       .cw-logo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-bottom: 1rem; max-height: 300px; overflow-y: auto; padding-right: 2px; }
       .cw-logo-grid::-webkit-scrollbar { width: 4px; } .cw-logo-grid::-webkit-scrollbar-track { background: transparent; } .cw-logo-grid::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 2px; }
-      .cw-tile { position: relative; border: 2px solid transparent; border-radius: 4px; cursor: pointer; overflow: hidden; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; padding: 0.6rem; transition: border-color 0.15s ease, transform 0.15s ease; }
+      .cw-tile { position: relative; border: 2px solid var(--rule); border-radius: 4px; cursor: pointer; overflow: hidden; aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; padding: 0.6rem; background: var(--ink); transition: border-color 0.15s ease, transform 0.15s ease; }
       .cw-tile:hover { border-color: var(--gray-dim); transform: translateY(-2px); }
       .cw-tile.active { border-color: #ffcb06; }
       .cw-tile.full-color { outline: 1px dashed var(--rule); outline-offset: -3px; }
@@ -891,9 +894,8 @@
 
       function renderLogoGrid() {
         el.logoGrid.innerHTML = LOGO_VARIANTS.map(v => {
-          const bgHex = BUCKET_HEX[v.origBg] || '#000000';
           const shortLabel = v.label.includes('·') ? v.label.split('· ')[1] : v.label;
-          return `<div class="cw-tile${v.isFullColor ? ' full-color' : ''}" data-variant="${v.id}" style="background:${bgHex};" title="${v.label}">
+          return `<div class="cw-tile${v.isFullColor ? ' full-color' : ''}" data-variant="${v.id}" title="${v.label}">
             <img src="${v.svg}" alt="${shortLabel}" loading="lazy" />
             <span class="cw-tile-label">${shortLabel}</span>
           </div>`;
