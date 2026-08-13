@@ -193,6 +193,8 @@
     .logo-filters { gap: 1rem; }
     .hero-logo { display: none; }
   }
+  .filter-btn.active[data-filter="style"][data-value="full-color"] { color: var(--white); background: var(--team-primary); border-color: var(--team-primary); }
+  .filter-btn.active[data-filter="style"][data-value="1-color"]    { color: var(--black); background: var(--white); border-color: var(--white); }
 </style>
 </head>
 <body>
@@ -308,6 +310,12 @@
             <button class="filter-btn" data-filter="format" data-value="svg">SVG</button>
             <button class="filter-btn" data-filter="format" data-value="png">PNG</button>
           </div>
+          <div class="filter-group">
+            <span class="filter-label">Style</span>
+            <button class="filter-btn active" data-filter="style" data-value="all">All</button>
+            <button class="filter-btn" data-filter="style" data-value="full-color">Full Color</button>
+            <button class="filter-btn" data-filter="style" data-value="1-color">1-Color</button>
+          </div>
         </div>
 
         <!-- ─── PRIMARY ─────────────────────────────────── -->
@@ -321,7 +329,7 @@
           </div>
           <div class="logo-showcase">
 
-            <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile" data-orig-bg="bg-black" data-style="full-color">
               <div class="logo-tile-img bg-black" style="padding: 4rem;">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Primary_FullColor.svg" alt="Primary Full Color" />
               </div>
@@ -334,7 +342,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-orange" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-orange" data-invisible-on="white" data-style="1-color">
               <div class="logo-tile-img bg-orange" style="padding: 4rem;">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Primary_1ColorDarkBKG.svg" alt="Primary 1-Color Dark" />
               </div>
@@ -347,7 +355,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black" data-style="1-color">
               <div class="logo-tile-img bg-white" style="padding: 4rem;">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Primary_1ColorLightBKG.svg" alt="Primary 1-Color Light" />
               </div>
@@ -374,7 +382,7 @@
           </div>
           <div class="logo-showcase">
 
-            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white" data-style="full-color">
               <div class="logo-tile-img bg-black">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Secondary_FullColor_DarkBKG.svg" alt="Secondary Full Color Dark" />
               </div>
@@ -387,7 +395,7 @@
               </div>
             </div>
 
-            <div class="logo-tile hidden" data-orig-bg="bg-white" data-show-only="white">
+            <div class="logo-tile hidden" data-orig-bg="bg-white" data-show-only="white" data-style="full-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Secondary_FullColor_LightBKG.svg" alt="Secondary Full Color Light" />
               </div>
@@ -400,7 +408,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-orange" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-orange" data-invisible-on="white" data-style="1-color">
               <div class="logo-tile-img bg-orange">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Secondary_1ColorDarkBKG.svg" alt="Secondary 1-Color Dark" />
               </div>
@@ -413,7 +421,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black" data-style="1-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Secondary_1ColorLightBKG.svg" alt="Secondary 1-Color Light" />
               </div>
@@ -440,7 +448,7 @@
           </div>
           <div class="logo-showcase">
 
-            <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile" data-orig-bg="bg-black" data-style="full-color">
               <div class="logo-tile-img bg-black">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Icon_FullColor.svg" alt="Icon Full Color" />
               </div>
@@ -453,7 +461,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-orange" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-orange" data-invisible-on="white" data-style="1-color">
               <div class="logo-tile-img bg-orange">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Icon_1ColorDarkBKG.svg" alt="Icon 1-Color Dark" />
               </div>
@@ -466,7 +474,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black" data-style="1-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Icon_1ColorLightBKG.svg" alt="Icon 1-Color Light" />
               </div>
@@ -493,7 +501,7 @@
           </a>
         </div>
         <div class="logo-showcase">
-          <div class="logo-tile" data-orig-bg="bg-black">
+          <div class="logo-tile" data-orig-bg="bg-black" data-style="full-color">
             <div class="logo-tile-img bg-black">
               <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Indigenous_FullColor.svg" alt="Indigenous on Black" />
             </div>
@@ -505,7 +513,7 @@
               </div>
             </div>
           </div>
-          <div class="logo-tile" data-orig-bg="bg-orange">
+          <div class="logo-tile" data-orig-bg="bg-orange" data-style="full-color">
             <div class="logo-tile-img bg-orange">
               <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Indigenous_FullColor.svg" alt="Indigenous on Orange" />
             </div>
@@ -517,7 +525,7 @@
               </div>
             </div>
           </div>
-          <div class="logo-tile" data-orig-bg="bg-white">
+          <div class="logo-tile" data-orig-bg="bg-white" data-style="full-color">
             <div class="logo-tile-img bg-white">
               <img src="../assets/OUTLAWS/SVG/DenverOutlaws_Indigenous_FullColor.svg" alt="Indigenous on White" />
             </div>
@@ -1169,6 +1177,18 @@
     });
   });
 
+  
+  // ── STYLE FILTER ─────────────────────────────────────────────────────
+  document.querySelectorAll('.filter-btn[data-filter="style"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-filter="style"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('.logo-tile').forEach(tile => {
+        tile.classList.toggle('hidden', val !== 'all' && tile.dataset.style !== val);
+      });
+    });
+  });
   // ── PRESS KIT DEMO ───────────────────────────────────────────────────
   document.querySelectorAll('[data-download]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); alert('[ Demo ] This would download: ' + el.dataset.download); });

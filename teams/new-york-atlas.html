@@ -227,6 +227,8 @@
     .logo-filters { gap: 1rem; }
     .hero-logo { display: none; }
   }
+  .filter-btn.active[data-filter="style"][data-value="full-color"] { color: var(--white); background: var(--team-primary); border-color: var(--team-primary); }
+  .filter-btn.active[data-filter="style"][data-value="1-color"]    { color: var(--black); background: var(--white); border-color: var(--white); }
 </style>
 </head>
 <body>
@@ -358,6 +360,12 @@
             <button class="filter-btn" data-filter="format" data-value="svg">SVG</button>
             <button class="filter-btn" data-filter="format" data-value="png">PNG</button>
           </div>
+          <div class="filter-group">
+            <span class="filter-label">Style</span>
+            <button class="filter-btn active" data-filter="style" data-value="all">All</button>
+            <button class="filter-btn" data-filter="style" data-value="full-color">Full Color</button>
+            <button class="filter-btn" data-filter="style" data-value="1-color">1-Color</button>
+          </div>
         </div>
 
         <!-- ─── PRIMARY LOGO ─────────────────────────────── -->
@@ -371,7 +379,7 @@
           </div>
           <div class="logo-showcase">
 
-            <div class="logo-tile" data-orig-bg="bg-blue">
+            <div class="logo-tile" data-orig-bg="bg-blue" data-style="full-color">
               <div class="logo-tile-img bg-blue">
                 <img src="../assets/ATLAS/SVG/NewYorkAtlas_Primary_FullColor.svg" alt="Primary Full Color" />
               </div>
@@ -384,7 +392,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-navy" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-navy" data-invisible-on="white" data-style="1-color">
               <div class="logo-tile-img bg-navy">
                 <img src="../assets/ATLAS/SVG/NewYorkAtlas_Primary_1ColorDarkBKG.svg" alt="Primary 1-Color Dark" />
               </div>
@@ -397,7 +405,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="navy,black">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="navy,black" data-style="1-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/ATLAS/SVG/NewYorkAtlas_Primary_1ColorLightBKG.svg" alt="Primary 1-Color Light" />
               </div>
@@ -424,7 +432,7 @@
           </div>
           <div class="logo-showcase">
 
-            <div class="logo-tile" data-orig-bg="bg-blue">
+            <div class="logo-tile" data-orig-bg="bg-blue" data-style="full-color">
               <div class="logo-tile-img bg-blue">
                 <img src="../assets/ATLAS/SVG/NewYorkAtlas_Icon__FullColor.svg" alt="Icon Full Color" />
               </div>
@@ -437,7 +445,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-navy" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-navy" data-invisible-on="white" data-style="1-color">
               <div class="logo-tile-img bg-navy">
                 <img src="../assets/ATLAS/SVG/NewYorkAtlas_Icon_1ColorDarkBKG.svg" alt="Icon 1-Color Dark" />
               </div>
@@ -450,7 +458,7 @@
               </div>
             </div>
 
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="navy,black">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="navy,black" data-style="1-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/ATLAS/SVG/NewYorkAtlas_Icon_1ColorLightBKG.svg" alt="Icon 1-Color Light" />
               </div>
@@ -476,7 +484,7 @@
           </a>
         </div>
         <div class="logo-showcase">
-          <div class="logo-tile" data-orig-bg="bg-blue">
+          <div class="logo-tile" data-orig-bg="bg-blue" data-style="full-color">
             <div class="logo-tile-img bg-blue">
               <img src="../assets/ATLAS/SVG/NewYorkAtlas_Indigenous_FullColor.svg" alt="Indigenous on Blue" />
             </div>
@@ -488,7 +496,7 @@
               </div>
             </div>
           </div>
-          <div class="logo-tile" data-orig-bg="bg-navy">
+          <div class="logo-tile" data-orig-bg="bg-navy" data-style="full-color">
             <div class="logo-tile-img bg-navy">
               <img src="../assets/ATLAS/SVG/NewYorkAtlas_Indigenous_FullColor.svg" alt="Indigenous on Navy" />
             </div>
@@ -500,7 +508,7 @@
               </div>
             </div>
           </div>
-          <div class="logo-tile" data-orig-bg="bg-white">
+          <div class="logo-tile" data-orig-bg="bg-white" data-style="full-color">
             <div class="logo-tile-img bg-white">
               <img src="../assets/ATLAS/SVG/NewYorkAtlas_Indigenous_FullColor.svg" alt="Indigenous on White" />
             </div>
@@ -1105,6 +1113,18 @@
     });
   });
 
+  
+  // ── STYLE FILTER ─────────────────────────────────────────────────────
+  document.querySelectorAll('.filter-btn[data-filter="style"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-filter="style"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('.logo-tile').forEach(tile => {
+        tile.classList.toggle('hidden', val !== 'all' && tile.dataset.style !== val);
+      });
+    });
+  });
   // ── PRESS KIT DEMO ───────────────────────────────────────────────────
   document.querySelectorAll('[data-download]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); alert('[ Demo ] This would download: ' + el.dataset.download); });

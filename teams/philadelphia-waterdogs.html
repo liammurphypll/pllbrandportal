@@ -226,6 +226,8 @@
     .logo-filters { gap: 1rem; }
     .hero-logo { display: none; }
   }
+  .filter-btn.active[data-filter="style"][data-value="full-color"] { color: var(--white); background: var(--team-primary); border-color: var(--team-primary); }
+  .filter-btn.active[data-filter="style"][data-value="1-color"]    { color: var(--black); background: var(--white); border-color: var(--white); }
 </style>
 </head>
 <body>
@@ -355,6 +357,12 @@
             <button class="filter-btn" data-filter="format" data-value="svg">SVG</button>
             <button class="filter-btn" data-filter="format" data-value="png">PNG</button>
           </div>
+          <div class="filter-group">
+            <span class="filter-label">Style</span>
+            <button class="filter-btn active" data-filter="style" data-value="all">All</button>
+            <button class="filter-btn" data-filter="style" data-value="full-color">Full Color</button>
+            <button class="filter-btn" data-filter="style" data-value="1-color">1-Color</button>
+          </div>
         </div>
 
         <!-- ─── PRIMARY LOGO ──────────────────────────────── -->
@@ -369,7 +377,7 @@
           <div class="logo-showcase">
 
             <!-- Full Color · Purple/Black -->
-            <div class="logo-tile" data-orig-bg="bg-purple" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-purple" data-invisible-on="white" data-style="full-color">
               <div class="logo-tile-img bg-purple">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Primary_FullColor_1.svg" alt="Primary Full Color" style="transform: scale(0.67);" />
               </div>
@@ -382,7 +390,7 @@
             </div>
 
             <!-- 1-Color Dark BKG · Purple/Black -->
-            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white" data-style="1-color">
               <div class="logo-tile-img bg-black">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Primary_1Color_DarkBKG.svg" alt="Primary 1-Color Dark BKG" style="transform: scale(0.67);" />
               </div>
@@ -395,7 +403,7 @@
             </div>
 
             <!-- Full Color · White (only when White filter is explicitly selected) -->
-            <div class="logo-tile hidden" data-orig-bg="bg-white" data-only-on="white">
+            <div class="logo-tile hidden" data-orig-bg="bg-white" data-only-on="white" data-style="full-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Primary_FullColor_2.svg" alt="Primary Full Color on White" />
               </div>
@@ -408,7 +416,7 @@
             </div>
 
             <!-- 1-Color Light BKG · White -->
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black,purple">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black,purple" data-style="1-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Primary_1Color_LightBKG.svg" alt="Primary 1-Color Light BKG" style="transform: scale(0.67);" />
               </div>
@@ -435,7 +443,7 @@
           <div class="logo-showcase">
 
             <!-- Full Color · Purple/Black -->
-            <div class="logo-tile" data-orig-bg="bg-purple" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-purple" data-invisible-on="white" data-style="full-color">
               <div class="logo-tile-img bg-purple">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Partial__FullColor.svg" alt="Partial Full Color" style="transform: scale(1.15);" />
               </div>
@@ -448,7 +456,7 @@
             </div>
 
             <!-- 1-Color Dark BKG · Purple/Black -->
-            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white">
+            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="white" data-style="1-color">
               <div class="logo-tile-img bg-black">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Partial_1ColorDarkBKG.svg" alt="Partial 1-Color Dark BKG" style="transform: scale(0.67);" />
               </div>
@@ -461,7 +469,7 @@
             </div>
 
             <!-- Full Color · White (only when White filter is explicitly selected) -->
-            <div class="logo-tile hidden" data-orig-bg="bg-white" data-only-on="white">
+            <div class="logo-tile hidden" data-orig-bg="bg-white" data-only-on="white" data-style="full-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Partial__FullColor_2.svg" alt="Partial Full Color on White" style="transform: scale(1.17);" />
               </div>
@@ -474,7 +482,7 @@
             </div>
 
             <!-- 1-Color Light BKG · White -->
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black,purple">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black,purple" data-style="1-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Partial_1ColorLightBKG.svg" alt="Partial 1-Color Light BKG" style="transform: scale(0.67);" />
               </div>
@@ -501,7 +509,7 @@
           <div class="logo-showcase">
 
             <!-- Full Color · adapts to any background -->
-            <div class="logo-tile" data-orig-bg="bg-purple">
+            <div class="logo-tile" data-orig-bg="bg-purple" data-style="full-color">
               <div class="logo-tile-img bg-purple">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Icon__FullColor.svg" alt="Icon Full Color" style="transform: scale(1.19);" />
               </div>
@@ -514,7 +522,7 @@
             </div>
 
             <!-- 1-Color Dark BKG · Black -->
-            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="purple,white">
+            <div class="logo-tile" data-orig-bg="bg-black" data-invisible-on="purple,white" data-style="1-color">
               <div class="logo-tile-img bg-black">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Icon_1ColorDarkBKG.svg" alt="Icon 1-Color Dark BKG" style="transform: scale(1.15);" />
               </div>
@@ -527,7 +535,7 @@
             </div>
 
             <!-- 1-Color Light BKG · White -->
-            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black,purple">
+            <div class="logo-tile" data-orig-bg="bg-white" data-invisible-on="black,purple" data-style="1-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Icon_1Color_LightBKG.svg" alt="Icon 1-Color Light BKG" style="transform: scale(0.67);" />
               </div>
@@ -552,7 +560,7 @@
             </a>
           </div>
           <div class="logo-showcase">
-            <div class="logo-tile" data-orig-bg="bg-purple">
+            <div class="logo-tile" data-orig-bg="bg-purple" data-style="full-color">
               <div class="logo-tile-img bg-purple">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Indigenous_FullColor.svg" alt="Indigenous on Purple" style="transform: scale(0.91);" />
               </div>
@@ -564,7 +572,7 @@
                 </div>
               </div>
             </div>
-            <div class="logo-tile" data-orig-bg="bg-black">
+            <div class="logo-tile" data-orig-bg="bg-black" data-style="full-color">
               <div class="logo-tile-img bg-black">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Indigenous_FullColor.svg" alt="Indigenous on Black" style="transform: scale(0.91);" />
               </div>
@@ -576,7 +584,7 @@
                 </div>
               </div>
             </div>
-            <div class="logo-tile" data-orig-bg="bg-white">
+            <div class="logo-tile" data-orig-bg="bg-white" data-style="full-color">
               <div class="logo-tile-img bg-white">
                 <img src="../assets/WATERDOGS/SVG/PhiladelphiaWaterdogs_Indigenous_FullColor.svg" alt="Indigenous on White" style="transform: scale(0.91);" />
               </div>
@@ -1246,6 +1254,18 @@
     });
   });
 
+  
+  // ── STYLE FILTER ─────────────────────────────────────────────────────
+  document.querySelectorAll('.filter-btn[data-filter="style"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-filter="style"]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.value;
+      document.querySelectorAll('.logo-tile').forEach(tile => {
+        tile.classList.toggle('hidden', val !== 'all' && tile.dataset.style !== val);
+      });
+    });
+  });
   // ── PRESS KIT DEMO ───────────────────────────────────────────────────
   document.querySelectorAll('[data-download]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); alert('[ Demo ] This would download: ' + el.dataset.download); });
