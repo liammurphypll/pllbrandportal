@@ -138,12 +138,53 @@ def next_section_number(html_text):
     return (max(nums) + 1) if nums else 1
 
 
-def build_widget_block(team_name, team_slug, section_number, logo_variants, bucket_colors):
+def get_max_viewbox_dim(variants, html_dir):
+    """Sample SVG viewBox dimensions to find the largest dimension used by this team's logos."""
+    max_dim = 0
+    for v in variants:
+        svg_rel = v.get('svg', '')
+        if not svg_rel:
+            continue
+        try:
+            svg_path = (html_dir / svg_rel).resolve()
+            content = svg_path.read_text(encoding='utf-8', errors='ignore')[:500]
+            m = re.search(r'viewBox="[0-9. ]* [0-9. ]* ([0-9.]+) ([0-9.]+)"', content)
+            if m:
+                w, h = float(m.group(1)), float(m.group(2))
+                max_dim = max(max_dim, w, h)
+        except Exception:
+            pass
+    return max_dim
+
+
+def compute_logo_scale(variants, html_dir):
+    """Return (width_pct, height_pct) for .cw-logo based on SVG viewBox size.
+    PLL/Guard logos have large viewBoxes (800-1080) with internal whitespace.
+    WLL compact logos have small viewBoxes (100-600) with tight artwork that fills the canvas.
+    """
+    max_dim = get_max_viewbox_dim(variants, html_dir)
+    if max_dim > 800:
+        return 50, 45   # PLL-scale: large viewBox, internal whitespace keeps visual size balanced
+    elif max_dim > 350:
+        return 40, 36   # WLL medium: 521-604 unit viewBoxes (Palms, Charm, Charging primary)
+    else:
+        return 33, 30   # very compact: < 350 unit viewBoxes
+
+
+def build_widget_block(team_name, team_slug, section_number, logo_variants, bucket_colors, html_dir=None):
     variants_json = json.dumps(logo_variants, indent=6)
     buckets_json = json.dumps(
         [{'name': k, 'hex': v} for k, v in bucket_colors.items()], indent=6
     )
     section_num_str = f"{section_number:02d} —"
+
+    # Logo display scale: derived from max SVG viewBox dimension
+    logo_w, logo_h = compute_logo_scale(logo_variants, html_dir) if html_dir else (50, 45)
+
+    # Init color: prefer navy (dark team color), then black, then first bucket
+    preferred_dark = ['navy', 'black']
+    init_hex = next((bucket_colors[n] for n in preferred_dark if n in bucket_colors),
+                    next(iter(bucket_colors.values()), '#000000'))
 
     return f"""
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
@@ -205,7 +246,7 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
       .cw-left {{ flex: 0 0 58%; }}
       .cw-right {{ flex: 1; min-width: 0; display: flex; flex-direction: column; }}
       .cw-stage {{ position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 360px; border-radius: 6px; border: 1px solid var(--rule); display: flex; align-items: center; justify-content: center; transition: background-color 0.2s ease; padding: 2rem; overflow: hidden; box-sizing: border-box; }}
-      .cw-logo {{ width: 50%; height: 45%; object-fit: contain; display: block; flex-shrink: 0; }}
+      .cw-logo {{ width: {logo_w}%; height: {logo_h}%; object-fit: contain; display: block; flex-shrink: 0; }}
       .cw-variant-tag {{ position: absolute; bottom: 0.6rem; right: 0.7rem; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.55); color: #fff; padding: 0.25rem 0.55rem; border-radius: 2px; }}
       .cw-logo-grid {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin-bottom: 1rem; max-height: 300px; overflow-y: auto; padding-right: 2px; }}
       .cw-logo-grid::-webkit-scrollbar {{ width: 4px; }} .cw-logo-grid::-webkit-scrollbar-track {{ background: transparent; }} .cw-logo-grid::-webkit-scrollbar-thumb {{ background: var(--rule); border-radius: 2px; }}
@@ -405,7 +446,7 @@ def build_widget_block(team_name, team_slug, section_number, logo_variants, buck
 
       renderLogoGrid();
       renderSwatches();
-      hsb = rgbToHsb(hexToRgb({json.dumps(bucket_colors.get('navy', '#000000'))}));
+      hsb = rgbToHsb(hexToRgb({json.dumps(init_hex)}));
       // Default to Primary category; fall back to whatever auto-picks first
       const _primaryVariant = LOGO_VARIANTS.find(v => !v.isFullColor && v.category === 'Primary');
       activeCategory = _primaryVariant ? 'Primary' : (bestVariant(currentHex(), null) || LOGO_VARIANTS[0]).category;
@@ -447,7 +488,7 @@ def process_file(path: Path, args):
     team_slug = path.stem
     section_number = next_section_number(html_text)
 
-    widget_html = build_widget_block(team_name, team_slug, section_number, logo_variants, bucket_colors)
+    widget_html = build_widget_block(team_name, team_slug, section_number, logo_variants, bucket_colors, html_dir=path.parent)
 
     new_html = html_text.replace('<footer class="footer">', widget_html + '\n  <footer class="footer">', 1)
 
