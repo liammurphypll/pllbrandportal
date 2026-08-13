@@ -660,6 +660,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -949,35 +952,27 @@
       }
       function currentHex() { return '#' + rgbToHex(hsbToRgb(hsb.h, hsb.s, hsb.b)); }
 
-      function nearestBucket(hex) {
-        const rgb = hexToRgb(hex);
-        let best = BUCKETS[0], bestDist = Infinity;
-        BUCKETS.forEach(b => {
-          const brgb = hexToRgb(b.hex);
-          const dist = (rgb.r - brgb.r) ** 2 + (rgb.g - brgb.g) ** 2 + (rgb.b - brgb.b) ** 2;
-          if (dist < bestDist) { bestDist = dist; best = b; }
-        });
-        return best.name;
+      // Luminance of a hex color (0 = black, 1 = white)
+      function luminance(hex) {
+        const { r, g, b } = hexToRgb(hex);
+        return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
       }
 
-      // Auto-picks the best 1-color variant for the current background,
-      // constrained to activeCategory so adjusting the slider never jumps
-      // to a different logo group (e.g. Icon never switches to Indigenous).
+      // True if a bucket name resolves to a dark color
+      const DARK_BUCKETS = new Set(
+        BUCKETS.filter(b => luminance(b.hex) < 0.4).map(b => b.name)
+      );
+
+      // Picks the right 1-color variant purely from background luminance:
+      // dark bg → dark-bkg variant; light bg → light-bkg variant.
+      // Always constrained to activeCategory so the logo group never changes.
       function bestVariant(bgHex, category) {
-        const bucket = nearestBucket(bgHex);
-        let candidates = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category) && !v.invisibleOn.includes(bucket));
-        if (candidates.length === 0) candidates = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category));
-        if (candidates.length === 0) candidates = LOGO_VARIANTS.filter(v => !v.isFullColor);
-        if (candidates.length === 0) candidates = LOGO_VARIANTS;
-        const rgb = hexToRgb(bgHex);
-        let best = candidates[0], bestDist = Infinity;
-        candidates.forEach(v => {
-          const refHex = BUCKET_HEX[v.origBg] || BUCKET_HEX['navy'] || '#000000';
-          const refRgb = hexToRgb(refHex);
-          const dist = (rgb.r - refRgb.r) ** 2 + (rgb.g - refRgb.g) ** 2 + (rgb.b - refRgb.b) ** 2;
-          if (dist < bestDist) { bestDist = dist; best = v; }
-        });
-        return best;
+        const bgDark = luminance(bgHex) < 0.4;
+        let pool = LOGO_VARIANTS.filter(v => !v.isFullColor && (!category || v.category === category));
+        if (pool.length === 0) pool = LOGO_VARIANTS.filter(v => !v.isFullColor);
+        if (pool.length === 0) pool = LOGO_VARIANTS;
+        const preferred = pool.filter(v => v.origBg && (bgDark ? DARK_BUCKETS.has(v.origBg) : !DARK_BUCKETS.has(v.origBg)));
+        return (preferred.length > 0 ? preferred : pool)[0];
       }
 
       function renderLogoGrid() {
@@ -1069,7 +1064,10 @@
 
       renderLogoGrid();
       renderSwatches();
-      setFromHex("#000000");
+      hsb = rgbToHsb(hexToRgb("#000000"));
+      const _init = bestVariant(currentHex(), null);
+      activeCategory = _init.category;
+      update();
     })();
     </script>
     <!-- ═══ /AUTO-INJECTED ═══ -->
