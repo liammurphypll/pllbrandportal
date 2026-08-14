@@ -541,6 +541,9 @@
     
 
   
+    
+
+  
     <!-- ═══ AUTO-INJECTED: Contrast Preview widget (inject_contrast_widget.py) ═══ -->
   <div class="content" style="padding-top:0;">
     <section class="section">
@@ -623,8 +626,6 @@
       .cw-dl-btn:hover { background: var(--team-primary); color: var(--black); border-color: var(--team-primary); }
       .cw-divider { border-top: 1px solid var(--rule); margin-bottom: 1.4rem; }
       .cw-picker-wrap { transition: opacity 0.2s ease; }
-      .cw-picker-wrap.disabled { opacity: 0.25; pointer-events: none; }
-      .cw-picker-wrap.disabled::before { content: 'Background picker only applies to 1-color logos'; display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-dim); margin-bottom: 0.75rem; opacity: 1; }
       .cw-hsb-row { display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.1rem; }
       .cw-hsb-letter { width: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gray-dim); flex-shrink: 0; }
       .cw-hsb-value { width: 46px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--white); flex-shrink: 0; }
@@ -902,15 +903,11 @@
         }
         const isFullColor = active.isFullColor;
 
-        // Full-color logos show on their own designed-for background
-        const displayBg = isFullColor
-          ? (BUCKET_HEX[active.origBg] || '#000000')
-          : pickerHex;
-
-        el.stage.style.backgroundColor = displayBg;
+        // Full-color logos stay fixed regardless of background — picker still controls bg
+        el.stage.style.backgroundColor = pickerHex;
         el.hexInput.value = pickerHex.replace('#', '');
         updateSliderPositions();
-        el.pickerWrap.classList.toggle('disabled', isFullColor);
+        el.pickerWrap.classList.remove('disabled');
 
         el.logo.src = active.svg;
         el.tag.textContent = `${active.category} · ${active.label.includes('·') ? active.label.split('· ')[1] : active.label}`;
