@@ -198,6 +198,45 @@
   .hero-inner { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
   .content .section { animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
 
+  /* ===== STYLE GUIDE BLOCKS ===== */
+  .sg-rule { border: none; border-top: 1px solid var(--rule); margin: 3.5rem 0 3rem; }
+  .sg-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--pll-yellow); margin-bottom: 1.5rem; }
+  .sg-sub-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-dim); margin-bottom: 0.75rem; }
+
+  /* Lockup */
+  .sg-lockup-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1px; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sg-lockup-panel { background: var(--ink); padding: 3rem 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .sg-lockup-panel + .sg-lockup-panel { border-left: 1px solid var(--rule); }
+  .sg-lockup-panel img { max-width: 60%; max-height: 160px; object-fit: contain; display: block; }
+  .sg-body-text { font-family: 'Archivo', sans-serif; font-size: 0.85rem; line-height: 1.65; color: var(--gray); max-width: 52ch; }
+
+  /* Safe zone */
+  .sg-safezone-wrap { display: inline-flex; flex-direction: column; align-items: center; gap: 0; position: relative; margin: 0 auto 1.5rem; }
+  .sg-safezone-p { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 500; color: var(--gray-dim); line-height: 1; text-align: center; user-select: none; }
+  .sg-safezone-row { display: flex; align-items: center; gap: 0; }
+  .sg-safezone-p-side { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 500; color: var(--gray-dim); line-height: 1; padding: 0 0.75rem; user-select: none; }
+  .sg-safezone-inner { border: 1px solid var(--rule); padding: 2rem; position: relative; }
+  .sg-safezone-inner img { width: 100px; height: 100px; object-fit: contain; display: block; }
+  .sg-safezone-caption { position: absolute; top: 0.35rem; left: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.45rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-dim); }
+
+  /* Usage grid */
+  .sg-usage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sg-usage-tile { position: relative; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+  .sg-usage-tile img { max-width: 55%; max-height: 55%; object-fit: contain; display: block; }
+  .sg-usage-tile-label { position: absolute; top: 0.6rem; left: 0.75rem; font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+  .sg-usage-tile-label.on-white { color: rgba(0,0,0,0.45); }
+  .sg-bg-black { background: #000000; }
+  .sg-bg-white { background: #ffffff; }
+  .sg-bg-yellow { background: var(--pll-yellow); }
+  .sg-bg-photo-dark { background: linear-gradient(135deg, #1a2a1a 0%, #0d1a0d 40%, #2a1a08 70%, #1a0d0d 100%); }
+  .sg-bg-photo-light { background: linear-gradient(135deg, #c8c0b4 0%, #b8a898 40%, #a89888 70%, #c0b4a8 100%); }
+
+  /* Do Not */
+  .sg-violation { position: relative; }
+  .sg-violation img { opacity: 0.9; }
+  .sg-x-badge { position: absolute; top: 0.6rem; right: 0.6rem; width: 20px; height: 20px; border-radius: 50%; background: #e53535; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: #fff; font-weight: 700; line-height: 1; z-index: 2; }
+  .sg-violation-border { outline: 2px solid rgba(229,53,53,0.4); outline-offset: -2px; }
+
   /* ===== EVENTS SECTION ===== */
   .events-layout { display: grid; grid-template-columns: 1fr 3fr; gap: 0.75rem; align-items: start; }
   .events-nav { display: flex; flex-direction: column; }
@@ -514,6 +553,129 @@
             </div>
           </div>
 
+        </div>
+      </div>
+
+      <!-- ── LOGO LOCKUP ─────────────────────────────────────── -->
+      <hr class="sg-rule" />
+
+      <div class="sg-eyebrow">Logo Lockup</div>
+      <div class="sg-lockup-grid">
+        <div class="sg-lockup-panel">
+          <span class="sg-sub-label">Logo Mark</span>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="PLL Shield Mark" />
+        </div>
+        <div class="sg-lockup-panel">
+          <span class="sg-sub-label">Logo Mark &amp; Word Mark</span>
+          <img src="assets/PLL/PLL Wordmark/SVG/PLL_Primary_White.svg" alt="PLL Wordmark" />
+        </div>
+      </div>
+      <p class="sg-body-text">The PLL logo is designed to be the symbol for the next stage in the game of lacrosse. The core shape of the logo mark is a shield to communicate strength, confidence and boldness. The shield shape is inspired by the shape of a lacrosse goal when viewed from behind. The left side of the shield has a simplified lacrosse head with diagonal hash marks communicating speed. On the right side of the shield are the letters PLL, so the mark can stand on its own and still communicate the brand name.</p>
+
+      <!-- ── SAFE ZONE ───────────────────────────────────────── -->
+      <hr class="sg-rule" />
+
+      <div class="sg-eyebrow">Logo Lockup | Safe Zone</div>
+      <div style="display:flex;gap:4rem;align-items:flex-start;flex-wrap:wrap;margin-bottom:1.5rem;">
+        <div>
+          <span class="sg-sub-label" style="display:block;margin-bottom:1rem;">Logo Mark</span>
+          <div class="sg-safezone-wrap">
+            <div class="sg-safezone-p">P</div>
+            <div class="sg-safezone-row">
+              <div class="sg-safezone-p-side">P</div>
+              <div class="sg-safezone-inner">
+                <span class="sg-safezone-caption">Safe zone</span>
+                <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="PLL Shield safe zone" />
+              </div>
+              <div class="sg-safezone-p-side">P</div>
+            </div>
+            <div class="sg-safezone-p">P</div>
+          </div>
+        </div>
+        <div>
+          <span class="sg-sub-label" style="display:block;margin-bottom:1rem;">Logo Mark &amp; Word Mark</span>
+          <div class="sg-safezone-wrap">
+            <div class="sg-safezone-p">P</div>
+            <div class="sg-safezone-row">
+              <div class="sg-safezone-p-side">P</div>
+              <div class="sg-safezone-inner">
+                <span class="sg-safezone-caption">Safe zone</span>
+                <img src="assets/PLL/PLL Wordmark/SVG/PLL_Primary_White.svg" alt="PLL Wordmark safe zone" style="width:220px;height:80px;" />
+              </div>
+              <div class="sg-safezone-p-side">P</div>
+            </div>
+            <div class="sg-safezone-p">P</div>
+          </div>
+        </div>
+      </div>
+      <p class="sg-body-text">Use the "P" as a guide to ensure you keep all elements a safe distance away from the logo when using it within designs. No matter the size of the logo, the "P" provides an easy and consistent device to measure the safe zone.</p>
+
+      <!-- ── COLOR USAGE ─────────────────────────────────────── -->
+      <hr class="sg-rule" />
+
+      <div class="sg-eyebrow">Logo Lockup | Color Usage</div>
+      <div class="sg-usage-grid" style="margin-bottom:1.5rem;">
+        <div class="sg-usage-tile sg-bg-black">
+          <span class="sg-usage-tile-label">White on Black</span>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="White on Black" />
+        </div>
+        <div class="sg-usage-tile sg-bg-white">
+          <span class="sg-usage-tile-label on-white">Black on White</span>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_Black.svg" alt="Black on White" />
+        </div>
+        <div class="sg-usage-tile sg-bg-photo-dark">
+          <span class="sg-usage-tile-label">White on Photo</span>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="White on Photo" />
+        </div>
+        <div class="sg-usage-tile sg-bg-black">
+          <span class="sg-usage-tile-label">Color on Black</span>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" alt="Color on Black" />
+        </div>
+        <div class="sg-usage-tile sg-bg-white">
+          <span class="sg-usage-tile-label on-white">Color on White</span>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" alt="Color on White" />
+        </div>
+        <div class="sg-usage-tile sg-bg-photo-light">
+          <span class="sg-usage-tile-label on-white">Black on Photo</span>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_Black.svg" alt="Black on Photo" />
+        </div>
+      </div>
+      <p class="sg-body-text">Whenever using the logo, be sure you are using the color that allows for best possible legibility. When placing the logo over an image, only use the white or black logo and not the color version. This will guarantee legibility.</p>
+
+      <!-- ── DO NOT ───────────────────────────────────────────── -->
+      <hr class="sg-rule" />
+
+      <div class="sg-eyebrow">Logo Lockup | Do Not</div>
+      <div class="sg-usage-grid" style="margin-bottom:0;">
+        <div class="sg-usage-tile sg-bg-black sg-violation sg-violation-border">
+          <span class="sg-usage-tile-label">Do Not Change Orientation</span>
+          <div class="sg-x-badge">✕</div>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" style="transform:rotate(35deg);" />
+        </div>
+        <div class="sg-usage-tile sg-bg-black sg-violation sg-violation-border">
+          <span class="sg-usage-tile-label">Do Not Distort the Shape</span>
+          <div class="sg-x-badge">✕</div>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" style="transform:scaleX(0.5) scaleY(1.25);" />
+        </div>
+        <div class="sg-usage-tile sg-bg-black sg-violation sg-violation-border">
+          <span class="sg-usage-tile-label">Do Not Stretch</span>
+          <div class="sg-x-badge">✕</div>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" style="transform:scaleX(1.6);" />
+        </div>
+        <div class="sg-usage-tile sg-bg-black sg-violation sg-violation-border">
+          <span class="sg-usage-tile-label">Do Not Add Effects</span>
+          <div class="sg-x-badge">✕</div>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" style="filter:drop-shadow(0 0 12px rgba(255,203,6,0.9));" />
+        </div>
+        <div class="sg-usage-tile sg-bg-black sg-violation sg-violation-border">
+          <span class="sg-usage-tile-label">Do Not Outline</span>
+          <div class="sg-x-badge">✕</div>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_White.svg" alt="" style="opacity:0.15;filter:drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff);" />
+        </div>
+        <div class="sg-usage-tile sg-bg-white sg-violation sg-violation-border">
+          <span class="sg-usage-tile-label on-white">Do Not Use Color on Photos</span>
+          <div class="sg-x-badge">✕</div>
+          <img src="assets/PLL/PLL Shield/SVG/PLL_Shield_FullColor.svg" alt="" style="opacity:0.6;" />
         </div>
       </div>
 
